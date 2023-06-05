@@ -1,4 +1,5 @@
-package com.electronic.store.dtos;
+package com.electronic.store.helper;
+
 
 import lombok.*;
 import org.springframework.http.HttpStatus;
@@ -7,11 +8,10 @@ import org.springframework.http.HttpStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ApiResponseMessage {
+
+public class ApiResponse {
 
     private String message;
     private boolean success;
     private HttpStatus status;
-
 }

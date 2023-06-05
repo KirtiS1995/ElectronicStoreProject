@@ -2,6 +2,7 @@ package com.electronic.store.services.impl;
 
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
+import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.repositories.UserRepository;
 import com.electronic.store.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,6 +23,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * * @author kirti
+     * @implNote  This method is for Creating User
+     * @param userDto
+     * @return
+     */
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("Entering DAO call for creating User ");
@@ -37,11 +43,17 @@ public class UserServiceImpl implements UserService {
         log.info("Completed DAO call for creating User ");
         return userDto1;
     }
-
+    /**
+     *  @author kirti
+     * @implNote  This method is for Updating User
+     * @param userDto
+     * @param userId
+     * @return
+     */
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
         log.info("Entering DAO call for updating User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not found with given ID"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
@@ -54,15 +66,23 @@ public class UserServiceImpl implements UserService {
         log.info("Completed DAO call for updating User  with userId :{}",userId);
         return updatedDto;
     }
-
+    /**
+     * @author kirti
+     * @implNote  This method is for delete User by Id
+     * @return
+     */
     @Override
     public void deleteUser(String userId) {
         log.info("Entering DAO call for deleting User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given id"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         log.info("Completed DAO call for deleting User  with userId :{}",userId);
         userRepo.delete(user);
     }
-
+    /**
+      * @author kirti
+     * @implNote  This Api is for Getting ALL Users
+     * @return
+     */
     @Override
     public List<UserDto> getALLUser() {
         log.info("Entering DAO call for getting all User  ");
@@ -71,23 +91,37 @@ public class UserServiceImpl implements UserService {
         log.info("Completed DAO call for getting all User  ");
         return dtoList;
     }
-
+    /**
+     * * @author kirti
+     * @implNote  This method is for Getting Single User By ID
+     * @return
+     */
     @Override
     public UserDto getUserById(String userId) {
         log.info("Entering DAO call for getting User with userId:{} ",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given id"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         log.info("Completed DAO call for getting User with userId:{} ",userId);
         return entityToDto(user);
     }
-
+    /**
+     *  @author kirti
+     * @implNote  This api is for Getting USer by email
+     * @param email
+     * @return
+     */
     @Override
     public UserDto getUserByEmail(String email) {
         log.info("Entering DAO call for getting User with email:{} ",email);
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found with given email"));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User","email",email));
         log.info("Completed DAO call for getting User with email:{} ",email);
         return entityToDto(user);
     }
-
+    /**
+     *  @author kirti
+     * @implNote  This api is for searching User using keywords
+     * @param keyword
+     * @return
+     */
     @Override
     public List<UserDto> searchUser(String keyword) {
         log.info("Entering DAO call for searching User with keyword:{} ",keyword);
