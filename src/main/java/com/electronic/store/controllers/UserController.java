@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.slf4j.Logger;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 //@Slf4j
@@ -29,7 +31,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
     {		logger.info("Request entering for create User");
         UserDto user = userService.createUser(userDto);
         logger.info("Completed Request for create User");
@@ -43,7 +45,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable String userId)
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable String userId)
     {
         logger.info("Request entering for updating  User with userID : {}",userId);
         UserDto userDto1 = userService.updateUser(userDto, userId);

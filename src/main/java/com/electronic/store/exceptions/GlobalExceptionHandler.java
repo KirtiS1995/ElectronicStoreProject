@@ -2,6 +2,8 @@ package com.electronic.store.exceptions;
 
 import com.electronic.store.helper.ApiResponse;
 import com.electronic.store.helper.AppConstats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,17 +16,19 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private Logger logger= LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> resourceNotFoundExceptionHandler(ResourceNotFoundException ex){
-//        ApiResponse responce = ApiResponse
-//                               .message(ex.getMessage())
-//                .success(true)
-//                .build();
-        ApiResponse apiResponse=new ApiResponse();
-        apiResponse.setMessage(AppConstats.RESOURCE_NOT_FOUND);
-        apiResponse.setSuccess(true);
-        apiResponse.setStatus(HttpStatus.OK);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+            logger.info("Exception handler invoked..!");
+        ApiResponse apiResponse=ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND)
+                .success(true)
+                .build();
+
+        return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
@@ -35,7 +39,6 @@ public class GlobalExceptionHandler {
             String message = error.getDefaultMessage();
             resp.put(fieldName, message);
         });
-
         return new ResponseEntity<Map<String,String>>(resp,HttpStatus.BAD_REQUEST);
     }
 

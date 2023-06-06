@@ -3,6 +3,7 @@ package com.electronic.store.services.impl;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
+import com.electronic.store.helper.AppConstats;
 import com.electronic.store.repositories.UserRepository;
 import com.electronic.store.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
         log.info("Entering DAO call for updating User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         log.info("Entering DAO call for deleting User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
         log.info("Completed DAO call for deleting User  with userId :{}",userId);
         userRepo.delete(user);
     }
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(String userId) {
         log.info("Entering DAO call for getting User with userId:{} ",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
         log.info("Completed DAO call for getting User with userId:{} ",userId);
         return entityToDto(user);
     }
@@ -112,7 +113,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByEmail(String email) {
         log.info("Entering DAO call for getting User with email:{} ",email);
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User","email",email));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(AppConstats.EMAIL_NOT_FOUND));
         log.info("Completed DAO call for getting User with email:{} ",email);
         return entityToDto(user);
     }
