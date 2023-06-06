@@ -3,9 +3,8 @@ package com.electronic.store.controllers;
 import com.electronic.store.dtos.ApiResponseMessage;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
-import com.electronic.store.helper.ApiResponse;
-import com.electronic.store.helper.AppConstats;
 import com.electronic.store.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import org.slf4j.Logger;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -27,27 +24,26 @@ public class UserController {
     private UserService userService;
 
     /**
-     * * @author kirti
      * @apiNote This api is for Creating User
      * @param userDto
      * @return
      */
-    @PostMapping("/")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
     {		logger.info("Request entering for create User");
         UserDto user = userService.createUser(userDto);
         logger.info("Completed Request for create User");
         return new ResponseEntity<UserDto>(user,HttpStatus.CREATED);
     }
+
     /**
-     * * @author kirti
      * @apiNote This api is for Updating User
      * @param userDto
      * @param userId
      * @return
      */
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable String userId)
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable String userId)
     {
         logger.info("Request entering for updating  User with userID : {}",userId);
         UserDto userDto1 = userService.updateUser(userDto, userId);
@@ -57,7 +53,6 @@ public class UserController {
 
 
     /**
-     * * @author kirti
      * @apiNote This Api is for Get Single User By ID
      * @return
      */
@@ -71,29 +66,21 @@ public class UserController {
     }
 
     /**
-     * @author kirti
      * @apiNote This Api is for delete User by Id
      * @return
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable String userId)
+    public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable String userId)
     {
         logger.info("Request entering for deleting User with userID : {}",userId);
         userService.deleteUser(userId);
-//        ApiResponseMessage message=ApiResponseMessage.builder().message(AppConstats.USER_DELETED)
-//                .success(true).status(HttpStatus.OK).build();
-
-        ApiResponse apiResponse=new ApiResponse();
-        apiResponse.setMessage(AppConstats.USER_DELETED);
-        apiResponse.setSuccess(true);
-        apiResponse.setStatus(HttpStatus.OK);
-
+        ApiResponseMessage message=ApiResponseMessage.builder().message("User Deleted Succesfully")
+                .success(true).status(HttpStatus.OK).build();
         logger.info("Completed Request for deleting  User with userID : {}",userId);
-        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);
+        return new ResponseEntity<ApiResponseMessage>(message,HttpStatus.OK);
     }
 
     /**
-     * * @author kirti
      * @apiNote This api is for Getting USer by email
      * @param email
      * @return
@@ -108,7 +95,6 @@ public class UserController {
     }
 
         /**
-         * * @author kirti
          * @apiNote This Api is for Getting ALL Users
          * @return
          */
@@ -121,7 +107,6 @@ public class UserController {
             return new ResponseEntity<List<UserDto>>(allUser,HttpStatus.OK);
         }
     /**
-     * * @author kirti
      * @apiNote This api is for searching User using keywords
      * @param keyword
      * @return
