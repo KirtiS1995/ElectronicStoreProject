@@ -5,6 +5,8 @@ public class AppConstats {
 
     public static final String ID_NOT_FOUND="User Not Found With given Id.";
 
+    public static final String IMAGE_UPLOAD="Image uploded successfully.";
+
     public static final String EMAIL_NOT_FOUND="User Not Found With given Email ID";
 
     public static final String PAGE_NUMBER="0";

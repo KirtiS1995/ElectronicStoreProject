@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                 .success(true)
                 .build();
 
-        return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(apiResponse, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
@@ -41,6 +41,17 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<Map<String,String>>(resp,HttpStatus.BAD_REQUEST);
     }
+    //handle Bad api request
+    @ExceptionHandler(BadApiRequestException.class)
+    public ResponseEntity<ApiResponse> handleBadApiRequest(BadApiRequestException ex){
+        logger.info("Bad Api Request..!");
+        ApiResponse apiResponse=ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .build();
 
+        return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
+    }
 
 }
