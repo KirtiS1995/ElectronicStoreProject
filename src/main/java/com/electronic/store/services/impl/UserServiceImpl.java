@@ -1,5 +1,6 @@
 package com.electronic.store.services.impl;
 
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
@@ -9,6 +10,10 @@ import com.electronic.store.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,14 +89,41 @@ public class UserServiceImpl implements UserService {
      * @implNote  This Api is for Getting ALL Users
      * @return
      */
+//    @Override
+//    public List<UserDto> getALLUser() {
+//        log.info("Entering DAO call for getting all User  ");
+//        List<User> users = userRepo.findAll();
+//        List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
+//        log.info("Completed DAO call for getting all User  ");
+//        return dtoList;
+//    }
+
     @Override
-    public List<UserDto> getALLUser() {
-        log.info("Entering DAO call for getting all User  ");
-        List<User> users = userRepo.findAll();
+    public PageableResponse<UserDto> getALLUser(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        log.info("Entering DAO call for getting all User with pageNumber And PageSize:{} ",pageNumber,pageSize);
+
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+
+        //default page no starts from zero
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+
+
+        Page<User> page = userRepo.findAll(pageable);
+        List<User> users = page.getContent();
         List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-        log.info("Completed DAO call for getting all User  ");
-        return dtoList;
+
+        PageableResponse<UserDto> response=new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber());
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+
+        log.info("Completed DAO call for getting all Userwith pageNumber And PageSize:{} ",pageNumber,pageSize );
+        return response;
     }
+
     /**
      * * @author kirti
      * @implNote  This method is for Getting Single User By ID

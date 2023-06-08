@@ -1,10 +1,10 @@
 package com.electronic.store.controllers;
 
-import com.electronic.store.dtos.ApiResponseMessage;
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
-import com.electronic.store.entities.User;
+import com.electronic.store.helper.ApiResponse;
+import com.electronic.store.helper.AppConstats;
 import com.electronic.store.services.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,14 +72,14 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable String userId)
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable String userId)
     {
         logger.info("Request entering for deleting User with userID : {}",userId);
         userService.deleteUser(userId);
-        ApiResponseMessage message=ApiResponseMessage.builder().message("User Deleted Succesfully")
+        ApiResponse message=ApiResponse.builder().message("User Deleted Succesfully")
                 .success(true).status(HttpStatus.OK).build();
         logger.info("Completed Request for deleting  User with userID : {}",userId);
-        return new ResponseEntity<ApiResponseMessage>(message,HttpStatus.OK);
+        return new ResponseEntity<ApiResponse>(message,HttpStatus.OK);
     }
 
     /**
@@ -100,11 +100,19 @@ public class UserController {
          * @apiNote This Api is for Getting ALL Users
          * @return
          */
+
+
         @GetMapping
-        public ResponseEntity<List<UserDto>> getAllUsers()
+        public ResponseEntity<PageableResponse<UserDto>> getAllUsers(
+                @RequestParam(value = "pageNumber",defaultValue = AppConstats.PAGE_NUMBER,required = false) int pageNumber,
+                @RequestParam(value = "pageSize",defaultValue = AppConstats.PAGE_SIZE,required = false) int pageSize,
+                @RequestParam(value = "sortBy",defaultValue = AppConstats.SORT_BY,required = false) String sortBy,
+                @RequestParam(value = "sortDir",defaultValue =AppConstats.SORT_DIR,required = false) String sortDir
+
+        )
         {
             logger.info("Request entering for Getting all Users ");
-            List<UserDto> allUser = userService.getALLUser();
+            List<UserDto> allUser = userService.getALLUser(pageNumber,pageSize,sortBy,sortDir);
             logger.info("Completed Request for Getting all Users");
             return new ResponseEntity<List<UserDto>>(allUser,HttpStatus.OK);
         }
