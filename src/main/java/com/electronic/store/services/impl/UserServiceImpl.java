@@ -5,6 +5,7 @@ import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
+import com.electronic.store.helper.Helper;
 import com.electronic.store.repositories.UserRepository;
 import com.electronic.store.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -103,22 +104,12 @@ public class UserServiceImpl implements UserService {
         log.info("Entering DAO call for getting all User with pageNumber And PageSize:{} ",pageNumber,pageSize);
 
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
-
-        //default page no starts from zero
+        //default page no starts from zero..
+        //pagenumber+1 for starting from 1
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
 
-
         Page<User> page = userRepo.findAll(pageable);
-        List<User> users = page.getContent();
-        List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-
-        PageableResponse<UserDto> response=new PageableResponse<>();
-        response.setContent(dtoList);
-        response.setPageNumber(page.getNumber());
-        response.setPageSize(page.getSize());
-        response.setTotalElements(page.getTotalElements());
-        response.setTotalPages(page.getTotalPages());
-        response.setLastPage(page.isLast());
+        PageableResponse<UserDto> response = Helper.getPageableResponse(page, UserDto.class);
 
         log.info("Completed DAO call for getting all Userwith pageNumber And PageSize:{} ",pageNumber,pageSize );
         return response;

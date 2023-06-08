@@ -112,9 +112,9 @@ public class UserController {
         )
         {
             logger.info("Request entering for Getting all Users ");
-            List<UserDto> allUser = userService.getALLUser(pageNumber,pageSize,sortBy,sortDir);
+            PageableResponse<UserDto> allUser = userService.getALLUser(pageNumber, pageSize, sortBy, sortDir);
             logger.info("Completed Request for Getting all Users");
-            return new ResponseEntity<List<UserDto>>(allUser,HttpStatus.OK);
+            return new ResponseEntity<PageableResponse<UserDto>>(allUser,HttpStatus.OK);
         }
     /**
      * @apiNote This api is for searching User using keywords
