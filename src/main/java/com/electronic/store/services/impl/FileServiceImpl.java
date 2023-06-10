@@ -1,6 +1,7 @@
 package com.electronic.store.services.impl;
 
 import com.electronic.store.exceptions.BadApiRequestException;
+import com.electronic.store.helper.AppConstats;
 import com.electronic.store.services.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,12 @@ public class FileServiceImpl implements FileService {
             }
             //upload Image
             Files.copy(file.getInputStream(), Paths.get(fullPathWithFileName));
-            logger.info("Completed DAO call for uploading image");
             logger.info("File full path:{}",fullPathWithFileName);
+            logger.info("Completed DAO call for uploading image");
             return fileNameWithExtesion;
         }
         else {
-        throw new BadApiRequestException("File With  "+extension+ " Extension not allowed ");
+        throw new BadApiRequestException(AppConstats.NOT_ALLOWED+extension);
         }
 
     }

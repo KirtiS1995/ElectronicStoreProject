@@ -17,4 +17,6 @@ public class AppConstats {
 
     public static final String SORT_BY="name";
 
+    public static final String NOT_ALLOWED="File  not allowed with extension ";
+
 }
