@@ -76,8 +76,8 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> searchCategory(String keyword) {
         log.info("Entering DAO call for searching Category with keyword:{} ",keyword);
         List<Category> categories = categoryRepo.findByTitleContaining(keyword);
-         categories.stream().map(object -> mapper.ma(user)).collect(Collectors.toList());
+        List<CategoryDto> categoryDtoList = categories.stream().map((cat) -> this.mapper.map(cat, CategoryDto.class)).collect(Collectors.toList());
         log.info("Completed DAO call for searching Category with keyword:{} ",keyword);
-        return dtoList;
+        return categoryDtoList;
     }
 }
