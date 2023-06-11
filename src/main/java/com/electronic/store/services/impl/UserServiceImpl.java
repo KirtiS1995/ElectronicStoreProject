@@ -11,12 +11,18 @@ import com.electronic.store.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Value("${user.profile.image.path}")
+    private String imagePath;
 
     /**
      * * @author kirti
@@ -60,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
         log.info("Entering DAO call for updating User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
@@ -81,7 +90,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         log.info("Entering DAO call for deleting User  with userId :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
+        //   images/user/abc.png
+        String fullPath = imagePath + user.getImageName();
+
+        try{
+            Path path = Paths.get(fullPath);
+            Files.delete(path);
+        }catch (NoSuchFileException ex){
+            log.info("User Image not found in folder");
+            ex.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
         log.info("Completed DAO call for deleting User  with userId :{}",userId);
         userRepo.delete(user);
     }
@@ -136,7 +159,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByEmail(String email) {
         log.info("Entering DAO call for getting User with email:{} ",email);
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(AppConstats.EMAIL_NOT_FOUND));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(AppConstats.EMAIL_NOT_FOUND +email));
         log.info("Completed DAO call for getting User with email:{} ",email);
         return entityToDto(user);
     }
