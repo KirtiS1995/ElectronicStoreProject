@@ -7,11 +7,16 @@ import com.electronic.store.entities.Category;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
+import com.electronic.store.helper.Helper;
 import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +65,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public PageableResponse<CategoryDto> getAllCategory(int pageNumber, int pageSize, String sortBy, String sortDir) {
-        return null;
+        log.info("Entering DAO call for getting all Category with pageNumber And PageSize:{} ",pageNumber,pageSize);
+
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+
+        Page<Category> categories = categoryRepo.findAll(pageable);
+        PageableResponse<CategoryDto> response = Helper.getPageableResponse(categories, CategoryDto.class);
+
+        log.info("Completed DAO call for getting all Category with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        return response;
     }
 
     @Override
