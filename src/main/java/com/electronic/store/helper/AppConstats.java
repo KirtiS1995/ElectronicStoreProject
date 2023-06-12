@@ -17,6 +17,8 @@ public class AppConstats {
 
     public static final String SORT_BY="name";
 
+    public static final String SORT_BY_CAT="title";
+
     public static final String NOT_ALLOWED="File  not allowed with extension ";
 
     public static final String CATEGPORY_NOT_FOUND="Category Not Found With given Id.  ";

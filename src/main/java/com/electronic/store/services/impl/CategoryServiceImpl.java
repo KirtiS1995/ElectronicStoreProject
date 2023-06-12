@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(CategoryDto categoryDto, String categoryId) {
+    public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
         log.info("Entering DAO call for updating category with categoryId :{}", categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         category.setTitle(categoryDto.getTitle());
@@ -56,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(String categoryId) {
+    public void deleteCategory(Integer categoryId) {
         log.info("Entering DAO call for deleting category with categoryId :{}", categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for updating User  with categoryId :{}", categoryId);
@@ -66,7 +65,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public PageableResponse<CategoryDto> getAllCategory(int pageNumber, int pageSize, String sortBy, String sortDir) {
         log.info("Entering DAO call for getting all Category with pageNumber And PageSize:{} ",pageNumber,pageSize);
-
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
 
@@ -78,14 +76,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getSingleCategory(String categoryId) {
-
+    public CategoryDto getSingleCategory(Integer categoryId) {
         log.info("Entering DAO call for getting Category with categoryId:{} ",categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for getting Category with categoryId:{} ",categoryId);
         return mapper.map(category,CategoryDto.class);
     }
-
     @Override
     public List<CategoryDto> searchCategory(String keyword) {
         log.info("Entering DAO call for searching Category with keyword:{} ",keyword);

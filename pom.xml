@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.electronic.store</groupId>
-	<artifactId>ElectronicStrore</artifactId>
+	<artifactId>ElectronicStore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ElectronicStrore</name>
 	<description>BackEnd project for electronic store</description>

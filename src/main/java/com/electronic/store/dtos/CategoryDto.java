@@ -4,6 +4,7 @@ package com.electronic.store.dtos;
 import lombok.*;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -15,7 +16,8 @@ import javax.validation.constraints.NotBlank;
 public class CategoryDto
 {
     @NotBlank
-    @Min(value = 4,message = "Title must be minimum 4 characters !!")
+//    @Min(value = 4,message = "Title must be minimum 4 characters !!")
+//    @Max(value = 10,message = "Title must be Maximum 10 characters")
     private String title;
 
     @NotBlank(message = "Description is required..!")
