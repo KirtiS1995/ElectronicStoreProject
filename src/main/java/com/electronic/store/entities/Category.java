@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category extends BaseEntity{
     @Id
     private String categoryId;
 

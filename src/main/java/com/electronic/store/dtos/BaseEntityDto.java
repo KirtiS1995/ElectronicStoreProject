@@ -9,28 +9,25 @@ import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 @MappedSuperclass
 @Setter
 @Getter
 public class BaseEntityDto {
 
-    @Column(name = "created_by", nullable = false)
-    @CreatedBy
-    public String createdBy;
+            @NotBlank
+            @Size(min = 5,max = 10,message = "Enter valid name  ..")
+             public String createdBy;
 
-    @Column(name = "created_date", updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdOn;
+             private LocalDateTime createdOn;
 
-    @Column(name = "updated_by", nullable = false)
-    @LastModifiedBy
-    private String lastModifiedBy;
+             @NotBlank
+             @Size(min = 5,max = 10,message = "Enter valid name  ..")
+             private String lastModifiedBy;
 
-    @Column(name = "modified_date", updatable = false)
-    @UpdateTimestamp
-    private LocalDateTime modifiedOn;
+             private LocalDateTime modifiedOn;
 
-    @Column(name = "is_active")
-    private String isActive;
+             private String isActive;
 }

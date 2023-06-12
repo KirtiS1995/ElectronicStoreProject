@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(userDto.getGender());
         user.setAbout(userDto.getAbout());
         user.setImageName(userDto.getImageName());
+        user.setLastModifiedBy(userDto.getLastModifiedBy());
 
         User updatedUser = userRepo.save(user);
         UserDto updatedDto = entityToDto(updatedUser);

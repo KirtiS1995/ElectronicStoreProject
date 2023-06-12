@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDto
+public class CategoryDto extends BaseEntityDto
 {
     private String categoryId;
 
