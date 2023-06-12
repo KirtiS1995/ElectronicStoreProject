@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class CategoryDto
 {
+    private String categoryId;
+
     @NotBlank
 //    @Min(value = 4,message = "Title must be minimum 4 characters !!")
 //    @Max(value = 10,message = "Title must be Maximum 10 characters")
@@ -25,4 +27,6 @@ public class CategoryDto
 
     @NotBlank
     private String coverImage;
+
+
 }

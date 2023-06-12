@@ -47,7 +47,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable Integer categoryId)
+    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable String categoryId)
     {
         logger.info("Request entering for updating  Categopry with category ID : {}",categoryId);
         CategoryDto categoryDto1 = categoryService.updateCategory(categoryDto, categoryId);
@@ -61,7 +61,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryDto> getSingleCategory(@PathVariable Integer categoryId)
+    public ResponseEntity<CategoryDto> getSingleCategory(@PathVariable String categoryId)
     {
         logger.info("Request entering for getting category with CategoryId : {}",categoryId);
         CategoryDto singleCategory = categoryService.getSingleCategory(categoryId);
@@ -75,7 +75,7 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Integer categoryId)
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable String categoryId)
     {
         logger.info("Request entering for deleting category with categoryId : {}",categoryId);
             categoryService.deleteCategory(categoryId);

@@ -12,16 +12,16 @@ public interface CategoryService {
     CategoryDto create(CategoryDto categoryDto);
 
     //update
-    CategoryDto updateCategory(CategoryDto categoryDto,Integer categoryId);
+    CategoryDto updateCategory(CategoryDto categoryDto,String categoryId);
 
     //delete
-    void deleteCategory(Integer categoryId);
+    void deleteCategory(String categoryId);
 
     //getall category
     PageableResponse<CategoryDto> getAllCategory(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     //get single category
-    CategoryDto getSingleCategory(Integer categoryId);
+    CategoryDto getSingleCategory(String categoryId);
 
     //search category
     List<CategoryDto> searchCategory(String keyword);

@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto create(CategoryDto categoryDto) {
         log.info("Entering DAO call for creating catagory ");
+        String categoryId = UUID.randomUUID().toString();
+        categoryDto.setCategoryId(categoryId);
+        //Convert Dto to entity
         Category category = mapper.map(categoryDto, Category.class);
         Category savedCategory = this.categoryRepo.save(category);
         log.info("Completed DAO call for creating category ");
@@ -42,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
+    public CategoryDto updateCategory(CategoryDto categoryDto, String categoryId) {
         log.info("Entering DAO call for updating category with categoryId :{}", categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         category.setTitle(categoryDto.getTitle());
@@ -55,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Integer categoryId) {
+    public void deleteCategory(String categoryId) {
         log.info("Entering DAO call for deleting category with categoryId :{}", categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for updating User  with categoryId :{}", categoryId);
@@ -76,7 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getSingleCategory(Integer categoryId) {
+    public CategoryDto getSingleCategory(String categoryId) {
         log.info("Entering DAO call for getting Category with categoryId:{} ",categoryId);
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for getting Category with categoryId:{} ",categoryId);

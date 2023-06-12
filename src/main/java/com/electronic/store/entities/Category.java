@@ -13,8 +13,7 @@ import javax.persistence.*;
 @Table(name = "categories")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer categoryId;
+    private String categoryId;
 
     @Column(name = "category_title",length = 60,nullable = false)
     private String title;
