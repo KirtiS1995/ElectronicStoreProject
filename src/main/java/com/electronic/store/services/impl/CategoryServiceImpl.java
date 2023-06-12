@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto create(CategoryDto categoryDto) {
-        log.info("Entering DAO call for creating catagory ");
+        log.info("Entering DAO call for creating cateory ");
         String categoryId = UUID.randomUUID().toString();
         categoryDto.setCategoryId(categoryId);
         //Convert Dto to entity
