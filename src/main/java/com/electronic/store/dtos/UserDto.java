@@ -21,9 +21,6 @@ public class UserDto extends BaseEntityDto {
     private String name;
 
     @Email(message = "Invalid Email..!!")
-//    @Pattern(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",message = "Invalid Email.")
-//    @Pattern(regexp ="[a-zA-Z0-9][a-zA-Z0-9-.]+@[a-z]*([.][a-zA-Z]+)+" ,message="Invalid email")
-    @NotBlank(message = "Email is Required.")
     private String email;
 
     @NotBlank(message = "Password Required")

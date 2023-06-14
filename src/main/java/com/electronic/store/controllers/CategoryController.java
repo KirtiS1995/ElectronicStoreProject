@@ -49,7 +49,7 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable String categoryId)
     {
-        logger.info("Request entering for updating  Categopry with category ID : {}",categoryId);
+        logger.info("Request entering for updating  Category with category ID : {}",categoryId);
         CategoryDto categoryDto1 = categoryService.updateCategory(categoryDto, categoryId);
         logger.info("Completed Request for updating  Category with categoryID : {}",categoryId);
         return new ResponseEntity<CategoryDto>(categoryDto1,HttpStatus.OK);
