@@ -16,14 +16,16 @@ import java.time.LocalDateTime;
 @Getter
 public class BaseEntityDto {
 
-
+            @NotBlank
              public String createdBy;
 
              private LocalDateTime createdOn;
 
+             @NotBlank
              private String lastModifiedBy;
 
              private LocalDateTime modifiedOn;
 
-             private String isActive;
+            @NotBlank
+            private String isActive;
 }
