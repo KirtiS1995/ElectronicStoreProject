@@ -48,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, String categoryId) {
         log.info("Entering DAO call for updating category with categoryId :{}", categoryId);
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
         category.setTitle(categoryDto.getTitle());
         category.setDescription(categoryDto.getDescription());
         category.setCoverImage(categoryDto.getCoverImage());
@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(String categoryId) {
         log.info("Entering DAO call for deleting category with categoryId :{}", categoryId);
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for updating User  with categoryId :{}", categoryId);
         categoryRepo.delete(category);
     }
@@ -83,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getSingleCategory(String categoryId) {
         log.info("Entering DAO call for getting Category with categoryId:{} ",categoryId);
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGPORY_NOT_FOUND + categoryId));
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
         log.info("Completed DAO call for getting Category with categoryId:{} ",categoryId);
         return mapper.map(category,CategoryDto.class);
     }

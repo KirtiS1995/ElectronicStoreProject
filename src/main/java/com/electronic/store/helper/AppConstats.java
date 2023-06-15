@@ -21,7 +21,7 @@ public class AppConstats {
 
     public static final String NOT_ALLOWED="File  not allowed with extension ";
 
-    public static final String CATEGPORY_NOT_FOUND= "Category Not Found With given Id .  ";
+    public static final String CATEGORY_NOT_FOUND= "Category Not Found With given Id .  ";
 
     public static final String CATEGORY_DELETED="Category Deleted with given Id.. .  ";
 
