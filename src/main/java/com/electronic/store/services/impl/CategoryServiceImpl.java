@@ -75,7 +75,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         //   images/user/abc.png
         String fullPath = imagePath + category.getCoverImage();
-
         try{
             Path path = Paths.get(fullPath);
             Files.delete(path);
@@ -86,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
             e.printStackTrace();
         }
 
-        log.info("Completed DAO call for updating User  with categoryId :{}", categoryId);
+        log.info("Completed DAO call for deleting User  with categoryId :{}", categoryId);
         categoryRepo.delete(category);
     }
 
