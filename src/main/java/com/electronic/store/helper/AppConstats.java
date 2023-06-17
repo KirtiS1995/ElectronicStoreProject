@@ -25,5 +25,9 @@ public class AppConstats {
 
     public static final String CATEGORY_DELETED="Category Deleted with given Id.. .  ";
 
+    public static final String PRODUCT_NOT_FOUND = "Product Not Found With given  ProductId .  ";
+
+    public static final String PRODUCT_DELETED = "Product Deleted with given ProductId.. .  ";
+
 
 }

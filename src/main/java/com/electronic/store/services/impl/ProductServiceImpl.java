@@ -1,0 +1,138 @@
+package com.electronic.store.services.impl;
+
+import com.electronic.store.dtos.PageableResponse;
+import com.electronic.store.dtos.ProductDto;
+import com.electronic.store.dtos.UserDto;
+import com.electronic.store.entities.Product;
+import com.electronic.store.entities.User;
+import com.electronic.store.exceptions.ResourceNotFoundException;
+import com.electronic.store.helper.AppConstats;
+import com.electronic.store.helper.Helper;
+import com.electronic.store.repositories.ProductRepository;
+import com.electronic.store.services.ProductService;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Service
+@Slf4j
+public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private ProductRepository productRepo;
+
+    @Autowired
+    private ModelMapper mapper;
+
+    /**
+     * * @author kirti
+     * @implNote  This method is for Creating Product
+     * @param productDto
+     * @return
+     */
+    @Override
+    public ProductDto createProduct(ProductDto productDto) {
+        log.info("Request entering DAO call for creating product ");
+        Product product = mapper.map(productDto, Product.class);
+        Product savedProduct = this.productRepo.save(product);
+        log.info("Request completed DAO call for creating product ");
+        return mapper.map(savedProduct,ProductDto.class);
+    }
+
+    /**
+     *  @author kirti
+     * @implNote  This method is for Updating product
+     * @param productDto
+     * @param productId
+     * @return
+     */
+    @Override
+    public ProductDto updateProduct(ProductDto productDto, String productId) {
+        log.info("Entering DAO call for updating Product  with productId :{}",productId);
+        //Fetch product of given Id
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND + productId));
+        product.setTitle(productDto.getTitle());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setDiscountedPrice(productDto.getDiscountedPrice());
+        product.setQuantity(productDto.getQuantity());
+        product.setLive(productDto.isLive());
+        product.setStock(productDto.isStock());
+
+        //save
+        Product updatedProduct = productRepo.save(product);
+        log.info("Entering DAO call for updating Product  with productId :{}",productId);
+        return mapper.map(updatedProduct,ProductDto.class);
+    }
+    /**
+     * @author kirti
+     * @implNote  This method is for delete Product by productId
+     * @param productId
+     * @return
+     */
+    @Override
+    public void deleteProduct(String productId) {
+        log.info("Request entering DAO call for deleting Product  with productId :{}",productId);
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND + productId));
+            productRepo.delete(product);
+            log.info("Completed DAO call for deleting Product  with productId :{}",productId);
+    }
+    /**
+     * * @author kirti
+     * @implNote  This method is for Getting Single Product By productId
+     * @param productId
+     * @return
+     */
+    @Override
+    public ProductDto getSingleProduct(String productId) {
+        log.info("Request entering DAO call for getting single Product with productId:{} ",productId);
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND + productId));
+        log.info("Entering DAO call for getting single Product with productId:{} ",productId);
+        return mapper.map(product,ProductDto.class);
+    }
+
+    /**
+     * @author kirti
+     * @implNote  This Api is for Getting ALL Product
+     * @return
+     */
+    @Override
+    public PageableResponse<ProductDto> getAll(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        log.info("Entering DAO call for getting all Product with pageNumber And PageSize:{} ",pageNumber,pageSize);
+
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        //default page no starts from zero..
+        //pagenumber+1 for starting from 1
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+
+        Page<Product> allProduct = productRepo.findAll(pageable);
+        PageableResponse<ProductDto> response = Helper.getPageableResponse(allProduct, ProductDto.class);
+
+        log.info("Completed DAO call for getting all Product with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        return response;
+    }
+
+    @Override
+    public List<ProductDto> getAllLive() {
+        return null;
+    }
+
+    @Override
+    public List<ProductDto> searchByTitle(String subTitle) {
+        log.info("Entering DAO call for searching Product with subTitle:{} ",subTitle);
+        List<Product> products = productRepo.findByTitleContaining(subTitle);
+        List<ProductDto> dtoList = products.stream().map(product -> mapper.map(product, ProductDto.class)).collect(Collectors.toList());
+        log.info("Completed DAO call for searching User with subTitle:{} ",subTitle);
+        return dtoList;
+    }
+}
