@@ -19,8 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,6 +45,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Request entering DAO call for creating product ");
+
+        String productId = UUID.randomUUID().toString();
+        productDto.setProductId(productId);
+        productDto.setAddedDate(new Date());
+
         Product product = mapper.map(productDto, Product.class);
         Product savedProduct = this.productRepo.save(product);
         log.info("Request completed DAO call for creating product ");
@@ -121,18 +128,37 @@ public class ProductServiceImpl implements ProductService {
         log.info("Completed DAO call for getting all Product with pageNumber And PageSize:{} ",pageNumber,pageSize );
         return response;
     }
-
+        /**
+        * @author kirti
+     * @implNote  This Api is for Getting ALL Live Product
+     * @return
+             */
     @Override
-    public List<ProductDto> getAllLive() {
-        return null;
+    public PageableResponse<ProductDto> getAllLive(int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        log.info("Entering DAO call for getting all Live Product with pageNumber And PageSize:{} ",pageNumber,pageSize);
+
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Product> liveProduct = productRepo.findByLiveTrue(pageable);
+        PageableResponse<ProductDto> response = Helper.getPageableResponse(liveProduct, ProductDto.class);
+        log.info("Completed DAO call for getting all Live Product with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        return response;
     }
-
+    /**
+     *  @author kirti
+     * @implNote  This api is for searching Product using sub Titles
+     * @param subTitle
+     * @return
+     */
     @Override
-    public List<ProductDto> searchByTitle(String subTitle) {
+    public PageableResponse<ProductDto> searchByTitle(String subTitle,int pageNumber, int pageSize, String sortBy, String sortDir) {
         log.info("Entering DAO call for searching Product with subTitle:{} ",subTitle);
-        List<Product> products = productRepo.findByTitleContaining(subTitle);
-        List<ProductDto> dtoList = products.stream().map(product -> mapper.map(product, ProductDto.class)).collect(Collectors.toList());
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Product> products = productRepo.findByTitleContaining(subTitle, pageable);
+        PageableResponse<ProductDto> response = Helper.getPageableResponse(products, ProductDto.class);
         log.info("Completed DAO call for searching User with subTitle:{} ",subTitle);
-        return dtoList;
+        return response;
     }
 }
