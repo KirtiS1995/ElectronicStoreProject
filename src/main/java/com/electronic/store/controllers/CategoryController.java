@@ -5,16 +5,23 @@ import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.helper.ApiResponse;
 import com.electronic.store.helper.AppConstats;
+import com.electronic.store.helper.ImageResponse;
 import com.electronic.store.services.CategoryService;
 import com.electronic.store.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -115,5 +122,43 @@ public class CategoryController {
         logger.info("Completed Request for Getting all categories");
         return new ResponseEntity<PageableResponse<CategoryDto>>(allCategory,HttpStatus.OK);
     }
+
+    /**
+     * @apiNote This api is for uploading image for category
+     * @param userId
+     * @param  image
+     * @return
+     */
+    // User image upload
+    @PostMapping("/image/{categoryId}")
+    public ResponseEntity<ImageResponse> uploadUserImage(@RequestPart("categoryImage") MultipartFile image,
+                                                         @PathVariable String categoryId) throws IOException {
+        logger.info("Request entering for uploading image  ");
+        String imageName = this.fileService.uploadImage(imageUploadPath, image);
+        UserDto user = this.userService.getUserById(userId);
+        user.setImageName(imageName);
+        UserDto userDto = userService.updateUser(user, userId);
+        ImageResponse response=ImageResponse.builder().imageName(imageName).message(AppConstats.IMAGE_UPLOAD).success(true).status(HttpStatus.CREATED).build();
+        logger.info("Request completed for uploading image  ");
+        return new ResponseEntity<ImageResponse>(response, HttpStatus.CREATED);
+    }
+    /**
+     * @apiNote This api is for serving image
+     * @param userId
+     * @param  response
+     * @return
+     */
+    //method to serve files
+    @GetMapping("/image/{userId}")
+    public void serveImage( @PathVariable String userId,
+                            HttpServletResponse response ) throws IOException {
+
+        UserDto user = this.userService.getUserById(userId);
+        logger.info("User Iamge name: {}",user.getImageName());
+        InputStream resource = this.fileService.getResource(imageUploadPath, user.getImageName());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
+    }
+
 
 }

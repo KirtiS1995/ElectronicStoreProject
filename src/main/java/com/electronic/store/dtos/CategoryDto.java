@@ -19,10 +19,10 @@ public class CategoryDto extends BaseEntityDto
     private String categoryId;
 
     @NotBlank
-    @Size(max = 10,message = "Enter valid title..")
+    @Size(max = 20,message = "Enter valid title..")
     private String title;
 
-    @Size(max = 25,message = "Enter Description upto range.!")
+    @Size(min = 10,message = "Enter Description upto range.!")
     private String description;
 
     @NotBlank
