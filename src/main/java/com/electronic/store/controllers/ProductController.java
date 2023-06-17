@@ -87,7 +87,7 @@ public class ProductController {
      * @apiNote This Api is for Getting ALL Product
      * @return
      */
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PageableResponse<ProductDto>> getAllProduct(
             @RequestParam(value = "pageNumber",defaultValue = AppConstats.PAGE_NUMBER,required = false) int pageNumber,
             @RequestParam(value = "pageSize",defaultValue = AppConstats.PAGE_SIZE,required = false) int pageSize,
