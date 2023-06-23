@@ -38,4 +38,6 @@ public class ProductDto extends BaseEntityDto {
     private boolean live;
     private boolean stock;
 
+    private String productImage;
+
 }
