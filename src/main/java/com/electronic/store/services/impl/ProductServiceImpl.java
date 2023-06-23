@@ -13,12 +13,18 @@ import com.electronic.store.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +41,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${product.image.path}")
+    private String imagePath;
 
     /**
      * * @author kirti
@@ -75,10 +84,12 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(productDto.getQuantity());
         product.setLive(productDto.isLive());
         product.setStock(productDto.isStock());
+        product.setLastModifiedBy(productDto.getLastModifiedBy());
+        product.setProductImage(productDto.getProductImage());
 
         //save
         Product updatedProduct = productRepo.save(product);
-        log.info("Entering DAO call for updating Product  with productId :{}",productId);
+        log.info("Completed DAO call for updating Product  with productId :{}",productId);
         return mapper.map(updatedProduct,ProductDto.class);
     }
     /**
@@ -91,7 +102,18 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(String productId) {
         log.info("Request entering DAO call for deleting Product  with productId :{}",productId);
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND + productId));
-            productRepo.delete(product);
+        //   images/user/abc.png
+        String fullPath = imagePath + product.getProductImage();
+        try{
+            Path path = Paths.get(fullPath);
+            Files.delete(path);
+        }catch (NoSuchFileException ex){
+            log.info("Product  Image not found in folder");
+            ex.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        productRepo.delete(product);
             log.info("Completed DAO call for deleting Product  with productId :{}",productId);
     }
     /**
@@ -134,6 +156,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
              */
     @Override
+
     public PageableResponse<ProductDto> getAllLive(int pageNumber, int pageSize, String sortBy, String sortDir) {
 
         log.info("Entering DAO call for getting all Live Product with pageNumber And PageSize:{} ",pageNumber,pageSize);

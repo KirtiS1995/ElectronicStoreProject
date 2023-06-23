@@ -38,7 +38,7 @@ public class CategoryController {
     @Autowired
     private FileService fileService;
 
-    @Value("${category.profile.image.path}")
+    @Value("${category.image.path}")
     private String imageUploadPath;
 
     /**
@@ -140,13 +140,13 @@ public class CategoryController {
     @PostMapping("/image/{categoryId}")
     public ResponseEntity<ImageResponse> uploadUserImage(@RequestPart("categoryImage") MultipartFile image,
                                                          @PathVariable String categoryId) throws IOException {
-        logger.info("Request entering for uploading image  ");
+        logger.info("Request entering for uploading image with categoryId :{} "+categoryId,image);
         String imageName = this.fileService.uploadImage(imageUploadPath, image);
         CategoryDto category = this.categoryService.getSingleCategory(categoryId);
         category.setCoverImage(imageName);
         CategoryDto categoryDto = categoryService.updateCategory(category, categoryId);
         ImageResponse response=ImageResponse.builder().imageName(imageName).message(AppConstats.IMAGE_UPLOAD).success(true).status(HttpStatus.CREATED).build();
-        logger.info("Request completed for uploading image  ");
+        logger.info("Request completed for uploading image with categoryId :{}  "+categoryId,image);
         return new ResponseEntity<ImageResponse>(response, HttpStatus.CREATED);
     }
     /**
@@ -159,9 +159,8 @@ public class CategoryController {
     @GetMapping("/image/{categoryId}")
     public void serveImage( @PathVariable String categoryId,
                             HttpServletResponse response ) throws IOException {
-
         CategoryDto category = this.categoryService.getSingleCategory(categoryId);
-        logger.info("Category Cover Iamge name: {}",category.getCoverImage());
+        logger.info("Category Cover Image name: {}",category.getCoverImage());
         InputStream resource = this.fileService.getResource(imageUploadPath, category.getCoverImage());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
