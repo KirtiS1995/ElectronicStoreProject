@@ -109,9 +109,9 @@ public class ProductController {
             @RequestParam(value = "sortBy",defaultValue = AppConstats.SORT_BY_CAT,required = false) String sortBy,
             @RequestParam(value = "sortDir",defaultValue =AppConstats.SORT_DIR,required = false) String sortDir)  {
 
-        logger.info("Request entering for getting all Product");
+        logger.info("Request entering for getting all Product with pageNumber:{}",pageNumber);
         PageableResponse<ProductDto> allProduct = productService.getAll(pageNumber, pageSize, sortBy, sortDir);
-        logger.info("Request completed for getting all Product");
+        logger.info("Request completed for getting all Product  with pageNumber:{}",pageNumber);
         return new ResponseEntity<>(allProduct, HttpStatus.OK);
     }
 
@@ -163,15 +163,15 @@ public class ProductController {
      */
     // User image upload
     @PostMapping("/image/{productId}")
-    public ResponseEntity<ImageResponse> uploadProductImage(@RequestPart("productImage") MultipartFile image,
+    public ResponseEntity<ImageResponse> uploadProductImage(@RequestParam("productImage") MultipartFile image,
                                                          @PathVariable String productId) throws IOException {
-        logger.info("Request entering for uploading image for product with productId :{}  ",productId,image);
+        logger.info("Request entering for uploading image for product with productID :{}",productId);
         String uploadImage = this.fileService.uploadImage(imagePath, image);
         ProductDto singleProduct = this.productService.getSingleProduct(productId);
         singleProduct.setProductImage(uploadImage);
         ProductDto product = productService.updateProduct(singleProduct, productId);
         ImageResponse response=ImageResponse.builder().imageName(uploadImage).message(AppConstats.IMAGE_UPLOAD).success(true).status(HttpStatus.CREATED).build();
-        logger.info("Request completed for uploading image for product with productId:{} ",productId,image);
+        logger.info("Request completed for uploading image for product with productId:{} ",productId);
         return new ResponseEntity<ImageResponse>(response, HttpStatus.CREATED);
     }
 

@@ -137,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public PageableResponse<ProductDto> getAll(int pageNumber, int pageSize, String sortBy, String sortDir) {
-        log.info("Entering DAO call for getting all Product with pageNumber And PageSize:{} ",pageNumber,pageSize);
+        log.info("Entering DAO call for getting all Product with pageNumber:{}",pageNumber);
 
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         //default page no starts from zero..
@@ -147,7 +147,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> allProduct = productRepo.findAll(pageable);
         PageableResponse<ProductDto> response = Helper.getPageableResponse(allProduct, ProductDto.class);
 
-        log.info("Completed DAO call for getting all Product with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        log.info("Completed DAO call for getting all Product with pageNumber :{} ",pageNumber );
         return response;
     }
         /**
@@ -159,13 +159,13 @@ public class ProductServiceImpl implements ProductService {
 
     public PageableResponse<ProductDto> getAllLive(int pageNumber, int pageSize, String sortBy, String sortDir) {
 
-        log.info("Entering DAO call for getting all Live Product with pageNumber And PageSize:{} ",pageNumber,pageSize);
+        log.info("Entering DAO call for getting all Live Product with pageNumber :{} ",pageNumber);
 
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Product> liveProduct = productRepo.findByLiveTrue(pageable);
         PageableResponse<ProductDto> response = Helper.getPageableResponse(liveProduct, ProductDto.class);
-        log.info("Completed DAO call for getting all Live Product with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        log.info("Completed DAO call for getting all Live Product with pageNumber :{} ",pageNumber );
         return response;
     }
     /**

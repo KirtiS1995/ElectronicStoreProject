@@ -27,14 +27,14 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public String uploadImage(String path, MultipartFile file) throws IOException {
-        String originalFilenameme = file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
 
-        logger.info("filename :{}",originalFilenameme);
+        logger.info("filename :{}",originalFilename);
         String filename= UUID.randomUUID().toString();
-        String extension=originalFilenameme.substring(originalFilenameme.lastIndexOf("."));
-        String fileNameWithExtesion=filename+extension;
-//        String fullPathWithFileName=path+ File.separator +fileNameWithExtesion;
-        String fullPathWithFileName=path +fileNameWithExtesion;
+        String extension=originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileNameWithExtension=filename+extension;
+//        String fullPathWithFileName=path+ File.separator +fileNameWithExtension;
+        String fullPathWithFileName=path + fileNameWithExtension;
 
         if (extension.equalsIgnoreCase(".png") || extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
         {
@@ -49,7 +49,7 @@ public class FileServiceImpl implements FileService {
             Files.copy(file.getInputStream(), Paths.get(fullPathWithFileName));
             logger.info("File full path:{}",fullPathWithFileName);
             logger.info("Completed DAO call for uploading image");
-            return fileNameWithExtesion;
+            return fileNameWithExtension;
         }
         else {
         throw new BadApiRequestException(AppConstats.NOT_ALLOWED+extension);

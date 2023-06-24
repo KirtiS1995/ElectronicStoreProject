@@ -105,7 +105,6 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
 
-
         log.info("Completed DAO call for deleting User  with userId :{}",userId);
         userRepo.delete(user);
     }
@@ -125,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageableResponse<UserDto> getALLUser(int pageNumber, int pageSize, String sortBy, String sortDir) {
-        log.info("Entering DAO call for getting all User with pageNumber And PageSize:{} ",pageNumber,pageSize);
+        log.info("Entering DAO call for getting all User with pageNumber :{} ",pageNumber);
 
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         //default page no starts from zero..
@@ -135,7 +134,7 @@ public class UserServiceImpl implements UserService {
         Page<User> page = userRepo.findAll(pageable);
         PageableResponse<UserDto> response = Helper.getPageableResponse(page, UserDto.class);
 
-        log.info("Completed DAO call for getting all Userwith pageNumber And PageSize:{} ",pageNumber,pageSize );
+        log.info("Completed DAO call for getting all User with pageNumber :{} ",pageNumber );
         return response;
     }
 
@@ -178,6 +177,7 @@ public class UserServiceImpl implements UserService {
         log.info("Completed DAO call for searching User with keyword:{} ",keyword);
         return dtoList;
     }
+
     private UserDto entityToDto(User savedUser)
     {
 //        UserDto userDto = UserDto.builder()
