@@ -154,13 +154,13 @@ public class UserController {
     @PostMapping("/image/{userId}")
     public ResponseEntity<ImageResponse> uploadUserImage(@RequestPart("userImage") MultipartFile image,
                                                          @PathVariable String userId) throws IOException {
-        logger.info("Request entering for uploading image  ");
+        logger.info("Request entering for uploading image with userId:{} ",userId);
               String imageName = this.fileService.uploadImage(imageUploadPath, image);
         UserDto user = this.userService.getUserById(userId);
         user.setImageName(imageName);
         UserDto userDto = userService.updateUser(user, userId);
         ImageResponse response=ImageResponse.builder().imageName(imageName).message(AppConstats.IMAGE_UPLOAD).success(true).status(HttpStatus.CREATED).build();
-        logger.info("Request completed for uploading image  ");
+        logger.info("Request completed for uploading image with userId:{} ",userId);
         return new ResponseEntity<ImageResponse>(response, HttpStatus.CREATED);
     }
 /**
@@ -175,7 +175,7 @@ public class UserController {
             HttpServletResponse response ) throws IOException {
 
         UserDto user = this.userService.getUserById(userId);
-        logger.info("User Iamge name: {}",user.getImageName());
+        logger.info("User Image name: {}",user.getImageName());
             InputStream resource = this.fileService.getResource(imageUploadPath, user.getImageName());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());

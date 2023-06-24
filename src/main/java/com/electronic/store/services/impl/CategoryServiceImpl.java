@@ -91,14 +91,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public PageableResponse<CategoryDto> getAllCategory(int pageNumber, int pageSize, String sortBy, String sortDir) {
-        log.info("Entering DAO call for getting all Category with pageNumber And PageSize:{} ",pageNumber,pageSize);
+        log.info("Entering DAO call for getting all Category with pageNumber :{} ",pageNumber);
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
 
         Page<Category> categories = categoryRepo.findAll(pageable);
         PageableResponse<CategoryDto> response = Helper.getPageableResponse(categories, CategoryDto.class);
 
-        log.info("Completed DAO call for getting all Category with pageNumber And PageSize:{} ",pageNumber,pageSize );
+        log.info("Completed DAO call for getting all Category with pageNumber :{} ",pageNumber );
         return response;
     }
 
