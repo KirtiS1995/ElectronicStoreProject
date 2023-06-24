@@ -2,12 +2,14 @@ package com.electronic.store.controllers;
 
 import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.PageableResponse;
+import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.helper.ApiResponse;
 import com.electronic.store.helper.AppConstats;
 import com.electronic.store.helper.ImageResponse;
 import com.electronic.store.services.CategoryService;
 import com.electronic.store.services.FileService;
+import com.electronic.store.services.ProductService;
 import com.electronic.store.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private FileService fileService;
@@ -166,5 +171,18 @@ public class CategoryController {
         StreamUtils.copy(resource,response.getOutputStream());
     }
 
-
+    /**
+     * @apiNote This api is for Creating product with category
+     * @param productDto
+     * @param  categoryId
+     * @return
+     */
+    @PostMapping("/{categoryId}/products")
+    public ResponseEntity<ProductDto> createProductWithCategory(@RequestBody ProductDto productDto,@PathVariable String categoryId)
+    {
+        logger.info("Request entering for create product with category:{}",categoryId);
+        categoryService.create(categoryDto);
+        logger.info("Completed Request for create product with category:{}",categoryId);
+        return new ResponseEntity<ProductDto>(categoryDto1, HttpStatus.CREATED);
+    }
 }

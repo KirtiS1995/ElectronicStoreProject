@@ -189,12 +189,26 @@ public class ProductServiceImpl implements ProductService {
         log.info("Completed DAO call for searching User with subTitle:{} ",subTitle);
         return response;
     }
-
+    /**
+     *  @author kirti
+     * @implNote  This api is for creating Product with categoryId
+     * @param productDto
+     * @param  categoryId
+     * @return
+     */
     @Override
     public ProductDto createWithCategory(ProductDto productDto, String categoryId) {
-    //fetch the category from db
+        log.info("Request completed DAO call for creating product with categoryId  :{} ",categoryId);
+        //fetch the category from db
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+        Product product = mapper.map(productDto, Product.class);
 
-        return null;
+        String productId = UUID.randomUUID().toString();
+        product.setProductId(productId);
+        product.setAddedDate(new Date());
+        product.setCategory(category);
+        Product savedProduct = this.productRepo.save(product);
+        log.info("Request completed DAO call for creating product with categoryId :{} ",categoryId);
+        return mapper.map(savedProduct,ProductDto.class);
     }
 }
