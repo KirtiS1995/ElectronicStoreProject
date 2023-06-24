@@ -138,15 +138,15 @@ public class CategoryController {
      */
     // User image upload
     @PostMapping("/image/{categoryId}")
-    public ResponseEntity<ImageResponse> uploadUserImage(@RequestPart("categoryImage") MultipartFile image,
+    public ResponseEntity<ImageResponse> uploadCategoryImage(@RequestPart("categoryImage") MultipartFile image,
                                                          @PathVariable String categoryId) throws IOException {
-        logger.info("Request entering for uploading image with categoryId :{} "+categoryId,image);
+        logger.info("Request entering for uploading image with categoryId :{} ",categoryId);
         String imageName = this.fileService.uploadImage(imageUploadPath, image);
         CategoryDto category = this.categoryService.getSingleCategory(categoryId);
         category.setCoverImage(imageName);
         CategoryDto categoryDto = categoryService.updateCategory(category, categoryId);
         ImageResponse response=ImageResponse.builder().imageName(imageName).message(AppConstats.IMAGE_UPLOAD).success(true).status(HttpStatus.CREATED).build();
-        logger.info("Request completed for uploading image with categoryId :{}  "+categoryId,image);
+        logger.info("Request completed for uploading image with categoryId :{}  ",categoryId);
         return new ResponseEntity<ImageResponse>(response, HttpStatus.CREATED);
     }
     /**
