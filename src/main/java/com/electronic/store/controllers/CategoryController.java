@@ -185,4 +185,13 @@ public class CategoryController {
         logger.info("Completed Request for create product with category:{}",categoryId);
         return new ResponseEntity<ProductDto>(productWithCategory, HttpStatus.CREATED);
     }
+
+    //Update category of product
+    @PutMapping("/{categoryId}/products/{productId}")
+    public ResponseEntity<ProductDto> updateCategoryOfProduct(@PathVariable String categoryId,
+                                                              @PathVariable String productId)
+    {
+
+        return null;
+    }
 }
