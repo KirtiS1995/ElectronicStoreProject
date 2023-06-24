@@ -181,8 +181,8 @@ public class CategoryController {
     public ResponseEntity<ProductDto> createProductWithCategory(@RequestBody ProductDto productDto,@PathVariable String categoryId)
     {
         logger.info("Request entering for create product with category:{}",categoryId);
-        categoryService.create(categoryDto);
+        ProductDto productWithCategory = productService.createWithCategory(productDto, categoryId);
         logger.info("Completed Request for create product with category:{}",categoryId);
-        return new ResponseEntity<ProductDto>(categoryDto1, HttpStatus.CREATED);
+        return new ResponseEntity<ProductDto>(productWithCategory, HttpStatus.CREATED);
     }
 }

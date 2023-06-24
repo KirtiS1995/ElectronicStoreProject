@@ -1,5 +1,6 @@
 package com.electronic.store.dtos;
 
+import com.electronic.store.entities.Category;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -39,5 +40,6 @@ public class ProductDto extends BaseEntityDto {
     private boolean stock;
 
     private String productImage;
+    private CategoryDto category;
 
 }
