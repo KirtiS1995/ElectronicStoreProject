@@ -3,11 +3,13 @@ package com.electronic.store.services.impl;
 import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
+import com.electronic.store.entities.Category;
 import com.electronic.store.entities.Product;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
 import com.electronic.store.helper.Helper;
+import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.repositories.ProductRepository;
 import com.electronic.store.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private CategoryRepository categoryRepo;
 
     @Value("${product.image.path}")
     private String imagePath;
@@ -183,5 +188,13 @@ public class ProductServiceImpl implements ProductService {
         PageableResponse<ProductDto> response = Helper.getPageableResponse(products, ProductDto.class);
         log.info("Completed DAO call for searching User with subTitle:{} ",subTitle);
         return response;
+    }
+
+    @Override
+    public ProductDto createWithCategory(ProductDto productDto, String categoryId) {
+    //fetch the category from db
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+
+        return null;
     }
 }
