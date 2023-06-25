@@ -191,6 +191,7 @@ public class CategoryController {
     public ResponseEntity<ProductDto> updateCategoryOfProduct(@PathVariable String categoryId,
                                                               @PathVariable String productId)
     {
+        productService.updateCategory(productId,categoryId);
 
         return null;
     }
