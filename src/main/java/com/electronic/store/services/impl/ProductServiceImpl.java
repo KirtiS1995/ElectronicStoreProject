@@ -3,11 +3,13 @@ package com.electronic.store.services.impl;
 import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
+import com.electronic.store.entities.Category;
 import com.electronic.store.entities.Product;
 import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
 import com.electronic.store.helper.Helper;
+import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.repositories.ProductRepository;
 import com.electronic.store.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private CategoryRepository categoryRepo;
 
     @Value("${product.image.path}")
     private String imagePath;
@@ -183,5 +188,65 @@ public class ProductServiceImpl implements ProductService {
         PageableResponse<ProductDto> response = Helper.getPageableResponse(products, ProductDto.class);
         log.info("Completed DAO call for searching User with subTitle:{} ",subTitle);
         return response;
+    }
+    /**
+     *  @author kirti
+     * @implNote  This api is for creating Product with categoryId
+     * @param productDto
+     * @param  categoryId
+     * @return
+     */
+    @Override
+    public ProductDto createWithCategory(ProductDto productDto, String categoryId) {
+        log.info("Request completed DAO call for creating product with categoryId  :{} ",categoryId);
+        //fetch the category from db
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+        Product product = mapper.map(productDto, Product.class);
+
+        String productId = UUID.randomUUID().toString();
+        product.setProductId(productId);
+        product.setAddedDate(new Date());
+        product.setCategory(category);
+        Product savedProduct = this.productRepo.save(product);
+        log.info("Request completed DAO call for creating product with categoryId :{} ",categoryId);
+        return mapper.map(savedProduct,ProductDto.class);
+    }
+
+    /**
+     * @implNote This method is for updating category with productId
+     * @param productId
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public ProductDto updateCategory(String productId, String categoryId) {
+
+        log.info("Request Entering DAO call for Updating category of product with categoryId :{} ",categoryId);
+        //product fetch
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND + productId));
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+        product.setCategory(category);
+        Product savedProduct = productRepo.save(product);
+
+        log.info("Request Entering DAO call for Updating category of product with categoryId :{} ",categoryId);
+
+        return mapper.map(savedProduct,ProductDto.class);
+    }
+
+    /**
+     * * @implNote This method is for getting all product of category
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public PageableResponse<ProductDto> getAllOfCategory(String categoryId,int pageNumber, int pageSize, String sortBy, String sortDir) {
+        log.info("Request Entering DAO call for getting product  of similar category with categoryId :{} ",categoryId);
+
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Product> page = productRepo.findByCategory(category,pageable);
+        log.info("Request Entering DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
+        return Helper.getPageableResponse(page,ProductDto.class);
     }
 }
