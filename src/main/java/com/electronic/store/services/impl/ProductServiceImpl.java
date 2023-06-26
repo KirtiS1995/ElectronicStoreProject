@@ -239,11 +239,13 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public PageableResponse<ProductDto> getAllOfCategory(String categoryId) {
+    public PageableResponse<ProductDto> getAllOfCategory(String categoryId,int pageNumber, int pageSize, String sortBy, String sortDir) {
         log.info("Request Entering DAO call for getting product  of similar category with categoryId :{} ",categoryId);
 
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
-        Page<Product> page = productRepo.findByCategory(category);
+        Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Product> page = productRepo.findByCategory(category,pageable);
         log.info("Request Entering DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
         return Helper.getPageableResponse(page,ProductDto.class);
     }

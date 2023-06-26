@@ -35,6 +35,6 @@ public interface ProductService {
     ProductDto updateCategory(String productId,String categoryId);
 
 //get all product of similar category
-    PageableResponse<ProductDto> getAllOfCategory(String categoryId);
+    PageableResponse<ProductDto> getAllOfCategory(String categoryId,int pageNumber, int pageSize, String sortBy, String sortDir);
 
 }

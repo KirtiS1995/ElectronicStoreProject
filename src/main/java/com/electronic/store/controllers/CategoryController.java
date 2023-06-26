@@ -199,7 +199,26 @@ public class CategoryController {
     {
         logger.info("Request entering for updating product with category:{}",productId);
         ProductDto productDto = productService.updateCategory(productId, categoryId);
-        logger.info("Request entering for updating product with category:{}",productId);
+        logger.info("Complete Request for updating product with category:{}",productId);
         return new ResponseEntity<>(productDto,HttpStatus.OK);
+    }
+
+    //get product of categories
+    /**
+     * @apiNote This api is for getting  product of categories
+     * * @param productId
+     * @return
+     */
+    @GetMapping("/{categoryId}/products")
+    public ResponseEntity<PageableResponse<ProductDto>> getProductOfCategory(@PathVariable String categoryId,
+    @RequestParam(value = "pageNumber",defaultValue = AppConstats.PAGE_NUMBER,required = false) int pageNumber,
+       @RequestParam(value = "pageSize",defaultValue = AppConstats.PAGE_SIZE,required = false) int pageSize,
+       @RequestParam(value = "sortBy",defaultValue = AppConstats.SORT_BY_CAT,required = false) String sortBy,
+       @RequestParam(value = "sortDir",defaultValue =AppConstats.SORT_DIR,required = false) String sortDir                                                                    )
+    {
+        logger.info("Request entering for  getting  product of categories with categoryId:{}",categoryId);
+        PageableResponse<ProductDto> response = productService.getAllOfCategory(categoryId,pageNumber,pageSize,sortBy,sortDir);
+        logger.info("Request completed for getting  product of categories with categoryId:{}",categoryId);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

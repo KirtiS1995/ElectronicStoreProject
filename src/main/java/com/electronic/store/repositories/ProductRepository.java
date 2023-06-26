@@ -16,5 +16,5 @@ public interface ProductRepository extends JpaRepository<Product,String> {
     //Find live products
     Page<Product> findByLiveTrue(Pageable pageable);
 
-    Page<Product> findByCategory(Category category);
+    Page<Product> findByCategory(Category category,Pageable pageable);
 }
