@@ -35,4 +35,6 @@ public interface ProductService {
     ProductDto updateCategory(String productId,String categoryId);
 
 
+    PageableResponse<ProductDto> getAllOfCategory(String categoryId);
+
 }

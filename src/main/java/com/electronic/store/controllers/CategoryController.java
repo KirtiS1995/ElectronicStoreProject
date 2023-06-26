@@ -187,12 +187,19 @@ public class CategoryController {
     }
 
     //Update category of product
+    /**
+     * @apiNote This api is for updating category for product
+     * @param productId
+     * @param  categoryId
+     * @return
+     */
     @PutMapping("/{categoryId}/products/{productId}")
     public ResponseEntity<ProductDto> updateCategoryOfProduct(@PathVariable String categoryId,
                                                               @PathVariable String productId)
     {
-        productService.updateCategory(productId,categoryId);
-
-        return null;
+        logger.info("Request entering for updating product with category:{}",productId);
+        ProductDto productDto = productService.updateCategory(productId, categoryId);
+        logger.info("Request entering for updating product with category:{}",productId);
+        return new ResponseEntity<>(productDto,HttpStatus.OK);
     }
 }
