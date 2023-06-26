@@ -232,4 +232,19 @@ public class ProductServiceImpl implements ProductService {
 
         return mapper.map(savedProduct,ProductDto.class);
     }
+
+    /**
+     * * @implNote This method is for getting all product of category
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public PageableResponse<ProductDto> getAllOfCategory(String categoryId) {
+        log.info("Request Entering DAO call for getting product  of similar category with categoryId :{} ",categoryId);
+
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CATEGORY_NOT_FOUND + categoryId));
+        Page<Product> page = productRepo.findByCategory(category);
+        log.info("Request Entering DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
+        return Helper.getPageableResponse(page,ProductDto.class);
+    }
 }

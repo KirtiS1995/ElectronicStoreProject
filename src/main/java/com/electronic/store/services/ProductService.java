@@ -34,7 +34,7 @@ public interface ProductService {
     //update category of product
     ProductDto updateCategory(String productId,String categoryId);
 
-
+//get all product of similar category
     PageableResponse<ProductDto> getAllOfCategory(String categoryId);
 
 }
