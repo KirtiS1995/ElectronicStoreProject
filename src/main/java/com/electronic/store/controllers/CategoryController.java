@@ -221,4 +221,5 @@ public class CategoryController {
         logger.info("Request completed for getting  product of categories with categoryId:{}",categoryId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
 }
