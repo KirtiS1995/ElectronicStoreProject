@@ -25,6 +25,7 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userServiceimpl ;
 
+    @Autowired
     static User user;
     static User user1;
 
