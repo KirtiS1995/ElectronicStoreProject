@@ -22,7 +22,7 @@ public class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Mock
+    @Autowired
     private ModelMapper mapper;
 
 //    @InjectMocks
@@ -50,7 +50,7 @@ public class UserServiceTest {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
         UserDto user1 = userService.createUser(mapper.map(user,UserDto.class));
         System.out.println(user1.getName());
-//        Assertions.assertNotNull(user1);
+        Assertions.assertNotNull(user1);
         Assertions.assertEquals("kirti",user1.getName());
 
     }
