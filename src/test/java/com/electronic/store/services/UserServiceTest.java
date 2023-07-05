@@ -14,18 +14,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class UserServiceTest {
 
-    @Mock
+    @MockBean
     private UserRepository userRepository;
 
     @Mock
     private ModelMapper mapper;
 
-    @InjectMocks
+//    @InjectMocks
+    @Autowired
     private UserService userService;
 
     User user;
@@ -47,9 +48,10 @@ public class UserServiceTest {
     public void createUserTest()
     {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
-        UserDto user1 = userService.createUser(mapper.map(user, UserDto.class));
+        UserDto user1 = userService.createUser(mapper.map(user,UserDto.class));
         System.out.println(user1.getName());
-        Assertions.assertNotNull(user1);
+//        Assertions.assertNotNull(user1);
+        Assertions.assertEquals("kirti",user1.getName());
 
     }
 }
