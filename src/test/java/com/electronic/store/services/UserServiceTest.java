@@ -52,6 +52,22 @@ public class UserServiceTest {
         System.out.println(user1.getName());
         Assertions.assertNotNull(user1);
         Assertions.assertEquals("kirti",user1.getName());
+    }
+
+    //Update user Test
+    public void updateUserTest(){
+        String  userId="";
+        UserDto userDto = UserDto.builder()
+                .name("kirti salunke")
+                .password("kirti")
+                .gender("female")
+                .about("This is updated user")
+                .imageName("xyz.png")
+                .build();
+
+
 
     }
+
+
 }
