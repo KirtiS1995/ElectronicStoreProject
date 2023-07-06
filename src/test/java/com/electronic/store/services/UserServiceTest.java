@@ -1,5 +1,6 @@
 package com.electronic.store.services;
 
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.repositories.UserRepository;
@@ -15,7 +16,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -92,6 +96,40 @@ public class UserServiceTest {
         Mockito.verify(userRepository,Mockito.times(1)).delete(user);
     }
 
-    //test case
+    //test case for get all user
+    @Test
+    public void getAllUsersTest()
+    {
+      User  user1 = User.builder()
+                .name("shlok")
+                .email("kirti@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+       User user2 = User.builder()
+                .name("yogesh")
+                .email("kirti@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+
+        List<User> userList= Arrays.asList(user,user1,user2);
+
+        Page<User> page =new PageImpl<>(userList);
+
+        Mockito.when(userRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+
+//        Sort sort = Sort.by("name").ascending();
+//        Pageable pageable= PageRequest.of(1,2,sort);
+
+        PageableResponse<UserDto> allUser = userService.getALLUser(1,2,"name","asc");
+
+        Assertions.assertEquals(3,allUser.getContent().size());
+
+    }
 
 }
