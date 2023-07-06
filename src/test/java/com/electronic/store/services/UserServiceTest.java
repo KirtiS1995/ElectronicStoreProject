@@ -128,6 +128,7 @@ public class UserServiceTest {
 
         PageableResponse<UserDto> allUser = userService.getALLUser(1,2,"name","asc");
 
+        System.out.println("total users :"+allUser.getContent().size());
         Assertions.assertEquals(3,allUser.getContent().size());
 
     }
