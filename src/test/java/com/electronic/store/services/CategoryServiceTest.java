@@ -134,12 +134,12 @@ class CategoryServiceTest {
                 .build();
         Category category2 =Category.builder()
                 .title("Mobile category")
-                .description("Category realted to Mobile")
+                .description("Category related to Mobile")
                 .coverImage("xyz.png")
                 .build();
         Category category3 =Category.builder()
                 .title("Mobile category")
-                .description("Category realted to Mobile")
+                .description("Category related to Mobile")
                 .coverImage("bbb.png")
                 .build();
 
@@ -148,6 +148,6 @@ class CategoryServiceTest {
         Mockito.when(categoryRepository.findByTitleContaining(keywords)).thenReturn(Arrays.asList(category,category1,category2,category3));
         List<CategoryDto> categoryDtos = categoryService.searchCategory(keywords);
         System.out.println("Category Size  = "+categoryDtos.size());
-        Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
+        Assertions.assertEquals(4,categoryDtos.size(),"Size not matched !!");
     }
 }
