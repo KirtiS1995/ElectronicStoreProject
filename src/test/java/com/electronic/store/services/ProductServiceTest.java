@@ -82,13 +82,11 @@ class ProductServiceTest {
 
     @Test
     public void deleteProduct() {
-//        String userId="abcId";
-//        //we can use Mockito.any()
-//        Mockito.when(userRepository.findById("abcId")).thenReturn(Optional.of(user));
-//
-//        userService.deleteUser(userId);
-//
-//        Mockito.verify(userRepository,Mockito.times(1)).delete(user);
+        String productId="id1";
+        Mockito.when(productRepository.findById("id1")).thenReturn(Optional.of(product));
+        productService.deleteProduct(productId);
+
+        Mockito.verify(productRepository,Mockito.times(1)).delete(product);
     }
 
     @Test
