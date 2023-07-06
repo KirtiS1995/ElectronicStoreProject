@@ -1,5 +1,6 @@
 package com.electronic.store.services;
 
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Product;
@@ -14,7 +15,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,6 +108,36 @@ class ProductServiceTest {
 
     @Test
     public void getAll() {
+       Product product1= Product.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .build();
+       Product product2 = Product.builder()
+                .title("MI")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("abc.png")
+                .build();
+
+        List<Product> list = Arrays.asList(product, product1, product2);
+
+        Page<Product> page =new PageImpl<>(list);
+
+        Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+        PageableResponse<ProductDto> allProduct = productService.getAll(1,2,"title","asc");
+
+        System.out.println("total product :"+allProduct.getContent().size());
+        Assertions.assertEquals(3,allProduct.getContent().size());
     }
 
     @Test
