@@ -102,7 +102,7 @@ public class UserServiceTest {
     {
       User  user1 = User.builder()
                 .name("shlok")
-                .email("kirti@gmail.com")
+                .email("kirti1@gmail.com")
                 .password("kirti")
                 .gender("male")
                 .about("Testing method for get all user")
@@ -131,6 +131,35 @@ public class UserServiceTest {
         System.out.println("total users :"+allUser.getContent().size());
         Assertions.assertEquals(3,allUser.getContent().size());
 
+    }
+
+    //Get user by id test
+    @Test
+    public void getUserByIdTest()
+    {
+        String userId="userIdTest";
+        //We can use any()
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        //Actual call service
+        UserDto userDto = userService.getUserById(userId);
+
+        Assertions.assertNotNull(userDto);
+        System.out.println(userDto.getName());
+        Assertions.assertEquals(user.getName(),userDto.getName(),"Name not matched");
+    }
+//  Get user by email test
+    @Test
+    public void getUserByEmailTest()
+    {
+        String email="kirti@gmail.com";
+        //We can use any()
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        //Actual call service
+        UserDto userDto = userService.getUserByEmail(email);
+
+        Assertions.assertNotNull(userDto);
+        System.out.println(userDto.getName());
+        Assertions.assertEquals(user.getName(),userDto.getName(),"Name not matched");
     }
 
 }
