@@ -146,5 +146,47 @@ class ProductServiceTest {
 
     @Test
     public void searchByTitle() {
+        Product product1= Product.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .build();
+        Product product2 = Product.builder()
+                .title("MI")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("abc.png")
+                .build();
+        Product product3= Product.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .build();
+
+        String keywords="phone";
+
+        Page<Product> page =new PageImpl<>(list);
+
+        Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+
+        Mockito.when(productRepository.findByTitleContaining(keywords, (Pageable) page)).thenReturn(Arrays.asList(product,product1,product2,product3));
+        List<UserDto> userDtos = userService.searchUser(keywords);
+        System.out.println("Search user are = "+userDtos.size());
+        Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
+
     }
 }
