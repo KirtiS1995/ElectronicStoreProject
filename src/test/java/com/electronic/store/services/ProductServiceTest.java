@@ -74,10 +74,10 @@ class ProductServiceTest {
 
         ProductDto productDto1 = productService.updateProduct(productDto, productId);
 
-        System.out.println(updatedUser.getName());
-        System.out.println(updatedUser.getImageName());
-        Assertions.assertNotNull(userDto);
-        Assertions.assertEquals(userDto.getName(),updatedUser.getName(),"Name is not validated");
+        System.out.println(productDto1.getTitle());
+        System.out.println(productDto1.getProductImage());
+        Assertions.assertNotNull(productDto1);
+        Assertions.assertEquals(productDto.getTitle(),productDto1.getTitle(),"Title is not validated");
     }
 
     @Test
