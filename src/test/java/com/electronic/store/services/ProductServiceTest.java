@@ -66,7 +66,7 @@ class ProductServiceTest {
                 .quantity(40)
                 .live(true)
                 .stock(false)
-                .productImage("abc.png")
+                .productImage("xyz.png")
                 .build();
 
         Mockito.when(productRepository.findById(Mockito.anyString())).thenReturn(Optional.of(product));
@@ -82,6 +82,13 @@ class ProductServiceTest {
 
     @Test
     public void deleteProduct() {
+//        String userId="abcId";
+//        //we can use Mockito.any()
+//        Mockito.when(userRepository.findById("abcId")).thenReturn(Optional.of(user));
+//
+//        userService.deleteUser(userId);
+//
+//        Mockito.verify(userRepository,Mockito.times(1)).delete(user);
     }
 
     @Test
