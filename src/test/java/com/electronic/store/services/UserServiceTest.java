@@ -1,5 +1,6 @@
 package com.electronic.store.services;
 
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.repositories.UserRepository;
@@ -15,6 +16,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -52,6 +58,148 @@ public class UserServiceTest {
         System.out.println(user1.getName());
         Assertions.assertNotNull(user1);
         Assertions.assertEquals("kirti",user1.getName());
+    }
+
+    //Update user Test
+    @Test
+    public void updateUserTest(){
+        String  userId="aabbccdd";
+        UserDto userDto = UserDto.builder()
+                .name("kirti salunke")
+                .password("kirti")
+                .gender("female")
+                .about("This is updated user")
+                .imageName("xyz.png")
+                .build();
+
+            Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+           UserDto updatedUser = userService.updateUser(userDto, userId);
+//        UserDto updatedUser =mapper.map(user,UserDto.class);            //Not updated old value get printed
+
+           System.out.println(updatedUser.getName());
+           System.out.println(updatedUser.getImageName());
+           Assertions.assertNotNull(userDto);
+           Assertions.assertEquals(userDto.getName(),updatedUser.getName(),"Name is not validated");
+    }
+    //Delete user test case
+    @Test
+    public void deleteUserTest()
+    {
+        String userId="abcId";
+        //we can use Mockito.any()
+        Mockito.when(userRepository.findById("abcId")).thenReturn(Optional.of(user));
+
+        userService.deleteUser(userId);
+
+        Mockito.verify(userRepository,Mockito.times(1)).delete(user);
+    }
+
+    //test case for get all user
+    @Test
+    public void getAllUsersTest()
+    {
+      User  user1 = User.builder()
+                .name("shlok")
+                .email("kirti1@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+       User user2 = User.builder()
+                .name("yogesh")
+                .email("kirti@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+
+        List<User> userList= Arrays.asList(user,user1,user2);
+
+        Page<User> page =new PageImpl<>(userList);
+
+        Mockito.when(userRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+
+//        Sort sort = Sort.by("name").ascending();
+//        Pageable pageable= PageRequest.of(1,2,sort);
+
+        PageableResponse<UserDto> allUser = userService.getALLUser(1,2,"name","asc");
+
+        System.out.println("total users :"+allUser.getContent().size());
+        Assertions.assertEquals(3,allUser.getContent().size());
 
     }
+
+    //Get user by id test
+    @Test
+    public void getUserByIdTest()
+    {
+        String userId="userIdTest";
+        //We can use any()
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        //Actual call service
+        UserDto userDto = userService.getUserById(userId);
+
+        Assertions.assertNotNull(userDto);
+        System.out.println(userDto.getName());
+        Assertions.assertEquals(user.getName(),userDto.getName(),"Name not matched");
+    }
+//  Get user by email test
+    @Test
+    public void getUserByEmailTest()
+    {
+        String email="kirti@gmail.com";
+        //We can use any()
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        //Actual call service
+        UserDto userDto = userService.getUserByEmail(email);
+
+        Assertions.assertNotNull(userDto);
+        System.out.println(userDto.getEmail());
+        Assertions.assertEquals(user.getEmail(),userDto.getEmail(),"Email not matched");
+    }
+
+    //test case for Search
+    @Test
+    public void searchUserTest()
+    {
+        User  user1 = User.builder()
+                .name("shlok salunke")
+                .email("shlok@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+        User user2 = User.builder()
+                .name("yogesh salunke")
+                .email("yogesh@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("xyz.png")
+                .build();
+        User user3 = User.builder()
+                .name("siya salunke")
+                .email("siya@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("pqr.png")
+                .build();
+
+        String keywords="salunke";
+
+        Mockito.when(userRepository.findByNameContaining(keywords)).thenReturn(Arrays.asList(user,user1,user2,user3));
+        List<UserDto> userDtos = userService.searchUser(keywords);
+        System.out.println("Search user are = "+userDtos.size());
+        Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
+
+
+
+    }
+
 }
