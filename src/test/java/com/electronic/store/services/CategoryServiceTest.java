@@ -59,11 +59,11 @@ class CategoryServiceTest {
     @Test
      public void updateCategory() {
         String  categoryId="catId";
-//                CategoryDto categoryDto=CategoryDto.builder()
-//                        .title("Tv")
-//                        .description("RElated to TV")
-//                        .coverImage("abc.png")
-//                        .build();
+                CategoryDto categoryDto=CategoryDto.builder()
+                        .title("Tv")
+                        .description("RElated to TV")
+                        .coverImage("abc.png")
+                        .build();
 
         Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
         Mockito.when(categoryRepository.save(Mockito.any())).thenReturn(category);
