@@ -147,7 +147,7 @@ class CategoryServiceTest {
 
         Mockito.when(categoryRepository.findByTitleContaining(keywords)).thenReturn(Arrays.asList(category,category1,category2,category3));
         List<CategoryDto> categoryDtos = categoryService.searchCategory(keywords);
-        System.out.println("Category Size  = "+categoryDtos.size());
+        System.out.println("Total Category Size  = "+categoryDtos.size());
         Assertions.assertEquals(4,categoryDtos.size(),"Size not matched !!");
     }
 }
