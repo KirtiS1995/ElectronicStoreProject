@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -55,6 +57,27 @@ class ProductServiceTest {
 
     @Test
     public void updateProduct() {
+        String  productId="productId";
+        ProductDto productDto = ProductDto.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("abc.png")
+                .build();
+
+        Mockito.when(productRepository.findById(Mockito.anyString())).thenReturn(Optional.of(product));
+        Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+
+        ProductDto productDto1 = productService.updateProduct(productDto, productId);
+
+        System.out.println(updatedUser.getName());
+        System.out.println(updatedUser.getImageName());
+        Assertions.assertNotNull(userDto);
+        Assertions.assertEquals(userDto.getName(),updatedUser.getName(),"Name is not validated");
     }
 
     @Test
