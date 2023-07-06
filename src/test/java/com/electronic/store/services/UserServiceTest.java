@@ -195,7 +195,8 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findByNameContaining(keywords)).thenReturn(Arrays.asList(user,user1,user2,user3));
         List<UserDto> userDtos = userService.searchUser(keywords);
-        Assertions.assertEquals(4,userDtos.size(),"Size not matched");
+        System.out.println("Search user are = "+userDtos.size());
+        Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
 
 
 
