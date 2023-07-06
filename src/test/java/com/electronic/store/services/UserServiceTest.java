@@ -65,6 +65,7 @@ public class UserServiceTest {
                 .imageName("xyz.png")
                 .build();
 
+            Mockito.when(userRepository.findById(Mockito.))
 
 
     }
