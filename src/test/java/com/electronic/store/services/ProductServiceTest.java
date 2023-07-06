@@ -85,12 +85,19 @@ class ProductServiceTest {
         String productId="id1";
         Mockito.when(productRepository.findById("id1")).thenReturn(Optional.of(product));
         productService.deleteProduct(productId);
-
         Mockito.verify(productRepository,Mockito.times(1)).delete(product);
     }
 
     @Test
     public void getSingleProduct() {
+        String productId="id1";
+        Mockito.when(productRepository.findById("id1")).thenReturn(Optional.of(product));
+
+        ProductDto singleProduct = productService.getSingleProduct(productId);
+
+        Assertions.assertNotNull(singleProduct);
+        System.out.println(singleProduct.getTitle());
+        Assertions.assertEquals(product.getTitle(),singleProduct.getTitle(),"Title not matched");
     }
 
     @Test
