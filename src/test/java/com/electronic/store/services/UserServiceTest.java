@@ -158,8 +158,47 @@ public class UserServiceTest {
         UserDto userDto = userService.getUserByEmail(email);
 
         Assertions.assertNotNull(userDto);
-        System.out.println(userDto.getName());
-        Assertions.assertEquals(user.getName(),userDto.getName(),"Name not matched");
+        System.out.println(userDto.getEmail());
+        Assertions.assertEquals(user.getEmail(),userDto.getEmail(),"Email not matched");
+    }
+
+    //test case for Search
+    @Test
+    public void searchUserTest()
+    {
+        User  user1 = User.builder()
+                .name("shlok salunke")
+                .email("shlok@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("abc.png")
+                .build();
+        User user2 = User.builder()
+                .name("yogesh salunke")
+                .email("yogesh@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("xyz.png")
+                .build();
+        User user3 = User.builder()
+                .name("siya salunke")
+                .email("siya@gmail.com")
+                .password("kirti")
+                .gender("male")
+                .about("Testing method for get all user")
+                .imageName("pqr.png")
+                .build();
+
+        String keywords="salunke";
+
+        Mockito.when(userRepository.findByNameContaining(keywords)).thenReturn(Arrays.asList(user,user1,user2,user3));
+        List<UserDto> userDtos = userService.searchUser(keywords);
+        Assertions.assertEquals(4,userDtos.size(),"Size not matched");
+
+
+
     }
 
 }
