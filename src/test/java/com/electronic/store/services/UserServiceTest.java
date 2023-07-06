@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
+
 @SpringBootTest
 public class UserServiceTest {
 
@@ -55,8 +57,9 @@ public class UserServiceTest {
     }
 
     //Update user Test
+    @Test
     public void updateUserTest(){
-        String  userId="";
+        String  userId="aabbccdd";
         UserDto userDto = UserDto.builder()
                 .name("kirti salunke")
                 .password("kirti")
@@ -65,8 +68,16 @@ public class UserServiceTest {
                 .imageName("xyz.png")
                 .build();
 
-            Mockito.when(userRepository.findById(Mockito.))
+            Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
 
+        UserDto updatedUser = userService.updateUser(userDto, userId);
+//        UserDto updatedUser =mapper.map(user,UserDto.class);            //Not updated old value get printed
+
+        System.out.println(updatedUser.getName());
+        System.out.println(updatedUser.getImageName());
+        Assertions.assertNotNull(userDto);
+        Assertions.assertEquals(userDto.getName(),updatedUser.getName(),"Name is not validated");
 
     }
 
