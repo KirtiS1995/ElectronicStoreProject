@@ -178,15 +178,15 @@ class ProductServiceTest {
                 .build();
 
         String keywords="phone";
-
+        List<Product> list = Arrays.asList(product, product1, product2, product3);
         Page<Product> page =new PageImpl<>(list);
 
         Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
 
-        Mockito.when(productRepository.findByTitleContaining(keywords, (Pageable) page)).thenReturn(Arrays.asList(product,product1,product2,product3));
-        List<UserDto> userDtos = userService.searchUser(keywords);
-        System.out.println("Search user are = "+userDtos.size());
-        Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
+        Mockito.when(productRepository.findByTitleContaining( Mockito.anyString(), Mockito.any())).thenReturn(page);
+        PageableResponse<ProductDto> pageableResponse = productService.searchByTitle(keywords,1,2,"name","asc");
+            System.out.println("Total no of record find ="+pageableResponse.getContent().size());
+        Assertions.assertEquals(4,pageableResponse.getContent().size(),"Size not matched.!!");
 
     }
 }
