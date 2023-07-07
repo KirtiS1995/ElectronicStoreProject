@@ -3,8 +3,10 @@ package com.electronic.store.services;
 import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
+import com.electronic.store.entities.Category;
 import com.electronic.store.entities.Product;
 import com.electronic.store.entities.User;
+import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.repositories.ProductRepository;
 import com.electronic.store.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -30,6 +32,8 @@ class ProductServiceTest {
     @MockBean
     private ProductRepository productRepository;
 
+    @MockBean
+    private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper mapper;
 
@@ -37,6 +41,39 @@ class ProductServiceTest {
     private ProductService productService;
 
   Product product;
+
+  Category category;
+
+    Product product1= Product.builder()
+            .title("Iphone")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("xyz.png")
+            .build();
+    Product product2 = Product.builder()
+            .title("MI")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("abc.png")
+            .build();
+    Product product3= Product.builder()
+            .title("Iphone")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("xyz.png")
+            .build();
 
     @BeforeEach
     public void init(){
@@ -49,6 +86,11 @@ class ProductServiceTest {
                 .live(true)
                 .stock(false)
                 .productImage("abc.png")
+                .build();
+     Category  category = Category.builder()
+                .title("TV")
+                .description("Category realted to TV")
+                .coverImage("xyz.png")
                 .build();
     }
 
@@ -108,29 +150,7 @@ class ProductServiceTest {
 
     @Test
     public void getAll() {
-       Product product1= Product.builder()
-                .title("Iphone")
-                .description("Phone having good camera")
-                .price(120000)
-                .discountedPrice(10000)
-                .quantity(40)
-                .live(true)
-                .stock(false)
-                .productImage("xyz.png")
-                .build();
-       Product product2 = Product.builder()
-                .title("MI")
-                .description("Phone having good camera")
-                .price(120000)
-                .discountedPrice(10000)
-                .quantity(40)
-                .live(true)
-                .stock(false)
-                .productImage("abc.png")
-                .build();
-
         List<Product> list = Arrays.asList(product, product1, product2);
-
         Page<Product> page =new PageImpl<>(list);
 
         Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
@@ -142,41 +162,19 @@ class ProductServiceTest {
 
     @Test
     public void getAllLive() {
+        List<Product> list = Arrays.asList(product, product1, product2);
+        Page<Product> page =new PageImpl<>(list);
+        Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+
+        Mockito.when(productRepository.findByLiveTrue(Mockito.any())).thenReturn(page);
+        PageableResponse<ProductDto> allLive = productService.getAllLive(1, 2, "name", "asc");
+        System.out.println("Total no of live record find ="+allLive.getContent().size());
+        Assertions.assertEquals(3,allLive.getContent().size(),"Size not matched.!!");
+
     }
 
     @Test
     public void searchByTitle() {
-        Product product1= Product.builder()
-                .title("Iphone")
-                .description("Phone having good camera")
-                .price(120000)
-                .discountedPrice(10000)
-                .quantity(40)
-                .live(true)
-                .stock(false)
-                .productImage("xyz.png")
-                .build();
-        Product product2 = Product.builder()
-                .title("MI")
-                .description("Phone having good camera")
-                .price(120000)
-                .discountedPrice(10000)
-                .quantity(40)
-                .live(true)
-                .stock(false)
-                .productImage("abc.png")
-                .build();
-        Product product3= Product.builder()
-                .title("Iphone")
-                .description("Phone having good camera")
-                .price(120000)
-                .discountedPrice(10000)
-                .quantity(40)
-                .live(true)
-                .stock(false)
-                .productImage("xyz.png")
-                .build();
-
         String keywords="phone";
         List<Product> list = Arrays.asList(product, product1, product2, product3);
         Page<Product> page =new PageImpl<>(list);
@@ -188,5 +186,25 @@ class ProductServiceTest {
             System.out.println("Total no of record find ="+pageableResponse.getContent().size());
         Assertions.assertEquals(4,pageableResponse.getContent().size(),"Size not matched.!!");
 
+    }
+
+    @Test
+    public void createWithCategory() {
+        String categoryId="catId";
+        Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+        ProductDto product1 = productService.createProduct(mapper.map(product, ProductDto.class));
+        System.out.println(product1.getTitle());
+        Assertions.assertNotNull(product1);
+        Assertions.assertEquals("Samsung",product1.getTitle());
+    }
+
+    @Test
+    public void updateCategory() {
+    }
+
+    @Test
+    public void getAllOfCategory() {
     }
 }

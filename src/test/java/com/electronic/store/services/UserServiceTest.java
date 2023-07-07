@@ -197,9 +197,6 @@ public class UserServiceTest {
         List<UserDto> userDtos = userService.searchUser(keywords);
         System.out.println("Search user are = "+userDtos.size());
         Assertions.assertEquals(4,userDtos.size(),"Size not matched !!");
-
-
-
     }
 
 }
