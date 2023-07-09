@@ -29,4 +29,5 @@ public class CategoryDto extends BaseEntityDto
     private String coverImage;
 
 
+
 }
