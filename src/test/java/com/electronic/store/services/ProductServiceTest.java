@@ -1,5 +1,6 @@
 package com.electronic.store.services;
 
+import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
@@ -87,12 +88,7 @@ class ProductServiceTest {
                 .stock(false)
                 .productImage("abc.png")
                 .build();
-     Category  category = Category.builder()
-                .title("TV")
-                .description("Category realted to TV")
-                .coverImage("xyz.png")
-                .build();
-    }
+         }
 
     @Test
    public void createProduct() {
@@ -191,20 +187,51 @@ class ProductServiceTest {
     @Test
     public void createWithCategory() {
         String categoryId="catId";
-        Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        Category  category = Category.builder()
+                .title("Mobile")
+                .description("Category related to mobile")
+                .coverImage("xyz.png")
+                .build();
+
+        Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
 
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
-        ProductDto product1 = productService.createProduct(mapper.map(product, ProductDto.class));
-        System.out.println(product1.getTitle());
-        Assertions.assertNotNull(product1);
-        Assertions.assertEquals("Samsung",product1.getTitle());
+
+        ProductDto productdto = this.mapper.map(product, ProductDto.class);
+       productService.createWithCategory(productdto, categoryId);
+        Assertions.assertEquals(product.getPrice(),productdto.getPrice(),"Failed ");
+
     }
 
     @Test
     public void updateCategory() {
+        String  productId="productId";
+        String categoryId="catId";
+        ProductDto productDto = ProductDto.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .build();
+
+        Category category = Category.builder()
+                .title("Mobile")
+                .description("Category related to mobile")
+                .coverImage("xyz.png")
+                .build();
+
+        Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
+        Mockito.when(productRepository.findById(Mockito.anyString())).thenReturn(Optional.of(product));
+        Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+
+        ProductDto productDto1 = productService.updateCategory(productId, categoryId);
+        Assertions.assertNotNull(productDto1);
+        Assertions.assertEquals(product.getTitle(),productDto1.getTitle(),"Title is not validated");
     }
 
-    @Test
-    public void getAllOfCategory() {
-    }
+
 }

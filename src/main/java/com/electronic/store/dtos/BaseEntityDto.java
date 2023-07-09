@@ -1,7 +1,6 @@
 package com.electronic.store.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -14,18 +13,20 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaseEntityDto {
 
-            @NotBlank
+//            @NotBlank
             public String createdBy;
 
             private LocalDateTime createdOn;
 
-            @NotBlank
+//            @NotBlank
             private String lastModifiedBy;
 
             private LocalDateTime modifiedOn;
 
-            @NotBlank
+//            @NotBlank
             private String isActive;
 }
