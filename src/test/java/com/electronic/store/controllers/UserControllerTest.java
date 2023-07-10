@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -184,6 +185,41 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").exists());
     }
 
+    @Test
+    public void searchUserTest() throws Exception {
+        String keyword= "salunke";
+        UserDto userDto2 = UserDto.builder()
+                .name("siya salunke")
+                .email("siya@gmail.com")
+                .password("siya123")
+                .gender("female")
+                .about("Testing method for getting all user")
+                .imageName("xyz.png")
+                .build();
+        UserDto userDto3 = UserDto.builder()
+                .name("jiya salunke")
+                .email("jiya@gmail.com")
+                .password("jiya123")
+                .gender("female")
+                .about("Testing method for getting all user")
+                .imageName("xyz.png")
+                .build();
+        UserDto userDto = UserDto.builder()
+                .name("kirti salunke")
+                .email("kirti@gmail.com")
+                .password("kirti123")
+                .gender("female")
+                .about("Testing method for create")
+                .imageName("xyz.png")
+                .build();
+        Mockito.when(userService.searchUser(keyword)).thenReturn(List.of(userDto3,userDto2,userDto));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/search/"+keyword)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     private String convertObjectToJsonString(Object user) {
        try {
