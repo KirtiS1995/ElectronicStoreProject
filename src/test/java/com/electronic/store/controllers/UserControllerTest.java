@@ -43,7 +43,7 @@ class UserControllerTest {
 
     @BeforeEach
     public  void init() {
-        user = User.builder()
+     user = User.builder()
                 .name("kirti")
                 .email("kirti@gmail.com")
                 .password("kirti123")
@@ -98,8 +98,10 @@ class UserControllerTest {
     void getSingleUserTest() throws Exception {
 
         String userId ="123";
+
         UserDto userDto = this.mapper.map(user, UserDto.class);
-        Mockito.when(userService.getUserById(Mockito.anyString())).thenReturn(userDto);
+//        Mockito.when(userService.getUserById(Mockito.anyString())).thenReturn(userDto);
+         Mockito.when(userService.getUserById(userId)).thenReturn(userDto);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/users/"+userId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,12 +109,10 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").exists());
-
-
     }
+
     @Test
      void getAllUserTest() throws Exception {
-
         UserDto userDto1 = UserDto.builder()
                 .name("shlok ")
                 .email("shlok@gmail.com")
@@ -157,6 +157,32 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void deleteUserTest() throws Exception {
+        String userId= "12345";
+    Mockito.doNothing().when(userService).deleteUser(Mockito.anyString());
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/users/" +userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+            Mockito.verify(userService,Mockito.times(1)).deleteUser(userId);
+    }
+
+    @Test
+    public void getUserByEmailTest() throws Exception {
+        String emailId="kirti@gmail.com";
+        UserDto userDto = this.mapper.map(user, UserDto.class);
+        Mockito.when(userService.getUserByEmail(Mockito.anyString())).thenReturn(userDto);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/email/"+emailId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").exists());
+    }
+
 
     private String convertObjectToJsonString(Object user) {
        try {
