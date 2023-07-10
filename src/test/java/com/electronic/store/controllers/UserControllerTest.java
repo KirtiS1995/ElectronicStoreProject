@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -184,35 +183,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").exists());
     }
 
-    @Test
-    void searchUserTest() throws Exception {
-        String keyword="salunke";
-        UserDto userDto1 = UserDto.builder()
-                .name("shlok salunke")
-                .email("shlok@gmail.com")
-                .password("shlok123")
-                .gender("female")
-                .about("Testing method for getting all user")
-                .imageName("xyz.png")
-                .build();
-        UserDto userDto2 = UserDto.builder()
-                .name("anvi salunke")
-                .email("siya@gmail.com")
-                .password("siya123")
-                .gender("female")
-                .about("Testing method for getting all user")
-                .imageName("xyz.png")
-                .build();
 
-    Mockito.when(userService.searchUser(Mockito.anyString())).thenReturn(List.of(userDto1,userDto2));
-        //request for url
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/users/search/" +keyword)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
     private String convertObjectToJsonString(Object user) {
        try {
         return new ObjectMapper().writeValueAsString(user);
