@@ -1,5 +1,6 @@
 package com.electronic.store.controllers;
 
+import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.services.UserService;
@@ -66,6 +67,32 @@ class UserControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.name").exists());
     }
+
+    @Test
+    public void updateUserTest() throws Exception {
+        //User/{usrrId}  +PUT request +json
+        String userId ="123";
+       UserDto userDto = UserDto.builder()
+                .name("kirti salunke")
+                .email("kirti@gmail.com")
+                .password("kirti123")
+                .gender("female")
+                .about("Testing method for create")
+                .imageName("xyz.png")
+                .build();
+       //        UserDto dto = mapper.map(user, UserDto.class);
+        Mockito.when(userService.updateUser(Mockito.any(),Mockito.anyString())).thenReturn(userDto);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.put("/users" +userId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(user))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").exists());
+   }
+
+
 
     private String convertObjectToJsonString(Object user) {
        try {
