@@ -228,7 +228,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         Product savedProduct = productRepo.save(product);
 
-        log.info("Request Entering DAO call for Updating category of product with categoryId :{} ",categoryId);
+        log.info("Request completed DAO call for Updating category of product with categoryId :{} ",categoryId);
 
         return mapper.map(savedProduct,ProductDto.class);
     }
@@ -246,7 +246,8 @@ public class ProductServiceImpl implements ProductService {
         Sort sort=(sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Product> page = productRepo.findByCategory(category,pageable);
-        log.info("Request Entering DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
+        log.info("Request completed DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
         return Helper.getPageableResponse(page,ProductDto.class);
     }
+
 }
