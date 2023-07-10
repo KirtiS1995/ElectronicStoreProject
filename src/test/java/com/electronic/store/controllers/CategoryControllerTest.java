@@ -1,6 +1,7 @@
 package com.electronic.store.controllers;
 
 import com.electronic.store.dtos.CategoryDto;
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Category;
 import com.electronic.store.entities.User;
@@ -19,6 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -101,6 +104,7 @@ class CategoryControllerTest {
 
     @Test
     void deleteCategoryTest() {
+
     }
 
     @Test
@@ -108,7 +112,41 @@ class CategoryControllerTest {
     }
 
     @Test
-    void getAllCategoriesTest() {
+    void getAllCategoriesTest() throws Exception {
+        CategoryDto category2 =CategoryDto.builder()
+                .title("Mobile")
+                .description("Category related to Mobile")
+                .coverImage("mb.png")
+                .build();
+        CategoryDto category3 =CategoryDto.builder()
+                .title("Camera")
+                .description("Category related to Camera")
+                .coverImage("cams.png")
+                .build();
+        CategoryDto category4 =CategoryDto.builder()
+                .title("Speaker")
+                .description("Category related to Spakers")
+                .coverImage("sp.png")
+                .build();
+
+        PageableResponse<CategoryDto> pageableResponse= new PageableResponse<>();
+
+        pageableResponse.setLastPage(false);
+        pageableResponse.setTotalElements(2000);
+        pageableResponse.setPageNumber(50);
+        pageableResponse.setContent(Arrays.asList(category2,category3,category4));
+        pageableResponse.setTotalPages(200);
+        pageableResponse.setPageSize(20);
+
+        Mockito.when(categoryService.getAllCategory(Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pageableResponse);
+
+        //request for url
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/categories")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private String convertObjectToJsonString(Object user) {
