@@ -103,12 +103,20 @@ class CategoryControllerTest {
     }
 
     @Test
-    void deleteCategoryTest() {
-
+    void deleteCategoryTest() throws Exception {
+        String categoryId= "12345";
+        Mockito.doNothing().when(categoryService).deleteCategory(Mockito.anyString());
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/categories/" +categoryId))
+                .andDo(print())
+                .andExpect(status().isOk());
+        //verify
+        Mockito.verify(categoryService,Mockito.times(1)).deleteCategory(categoryId);
     }
 
     @Test
     void searchCategoryTest() {
+
     }
 
     @Test
