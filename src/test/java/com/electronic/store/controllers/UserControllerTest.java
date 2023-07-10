@@ -166,7 +166,8 @@ class UserControllerTest {
                         MockMvcRequestBuilders.delete("/users/" +userId))
                 .andDo(print())
                 .andExpect(status().isOk());
-            Mockito.verify(userService,Mockito.times(1)).deleteUser(userId);
+        //verify
+        Mockito.verify(userService,Mockito.times(1)).deleteUser(userId);
     }
 
     @Test
