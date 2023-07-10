@@ -207,7 +207,7 @@ class UserControllerTest {
     Mockito.when(userService.searchUser(Mockito.anyString())).thenReturn(List.of(userDto1,userDto2));
         //request for url
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/users")
+                        MockMvcRequestBuilders.get("/users/search/" +keyword)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
