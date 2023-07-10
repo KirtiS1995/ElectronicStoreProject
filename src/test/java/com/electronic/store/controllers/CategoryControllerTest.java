@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -115,8 +116,30 @@ class CategoryControllerTest {
     }
 
     @Test
-    void searchCategoryTest() {
-
+    void searchCategoryTest() throws Exception {
+        String keyword= "category";
+        CategoryDto category2 =CategoryDto.builder()
+                .title("Mobile")
+                .description("Category related to Mobile")
+                .coverImage("mb.png")
+                .build();
+        CategoryDto category3 =CategoryDto.builder()
+                .title("Camera")
+                .description("Category related to Camera")
+                .coverImage("cams.png")
+                .build();
+        CategoryDto category4 =CategoryDto.builder()
+                .title("Speaker")
+                .description("Category related to Spakers")
+                .coverImage("sp.png")
+                .build();
+        Mockito.when(categoryService.searchCategory(keyword)).thenReturn(List.of(category2,category3,category4));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/categories/search/"+keyword)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
