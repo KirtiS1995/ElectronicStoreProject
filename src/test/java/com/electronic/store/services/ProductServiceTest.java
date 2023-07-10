@@ -225,7 +225,7 @@ class ProductServiceTest {
         Product product4 = Product.builder()
                 .title("Iphone")
                 .description("Phone having good camera")
-                .price(120000)
+                .price(1230000)
                 .discountedPrice(10000)
                 .quantity(40)
                 .live(true)
@@ -240,9 +240,10 @@ class ProductServiceTest {
 
         ProductDto productDto1 = productService.updateCategory(productId, categoryId);
 
-//        System.out.println(productDto1.getPrice());
+        System.out.println(productDto1.getPrice());
         Assertions.assertNotNull(productDto1);
-        Assertions.assertEquals(category.getTitle(),productDto1.getTitle(),"Title is not validated");
+        Assertions.assertEquals(category1.getCategoryId(),productDto1.getProductId());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateCategory(productId,"1234"));
     }
 
 
