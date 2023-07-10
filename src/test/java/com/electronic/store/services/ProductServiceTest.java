@@ -91,7 +91,7 @@ class ProductServiceTest {
          }
 
     @Test
-   public void createProduct() {
+   public void createProductTest() {
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
         ProductDto product1 = productService.createProduct(mapper.map(product, ProductDto.class));
         System.out.println(product1.getTitle());
@@ -100,7 +100,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void updateProduct() {
+    public void updateProductTest() {
         String  productId="productId";
         ProductDto productDto = ProductDto.builder()
                 .title("Iphone")
@@ -125,7 +125,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void deleteProduct() {
+    public void deleteProductTest() {
         String productId="id1";
         Mockito.when(productRepository.findById("id1")).thenReturn(Optional.of(product));
         productService.deleteProduct(productId);
@@ -133,7 +133,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void getSingleProduct() {
+    public void getSingleProductTest() {
         String productId="id1";
         Mockito.when(productRepository.findById("id1")).thenReturn(Optional.of(product));
 
@@ -145,7 +145,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllTest() {
         List<Product> list = Arrays.asList(product, product1, product2);
         Page<Product> page =new PageImpl<>(list);
 
@@ -157,7 +157,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void getAllLive() {
+    public void getAllLiveTest() {
         List<Product> list = Arrays.asList(product, product1, product2);
         Page<Product> page =new PageImpl<>(list);
         Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
@@ -170,7 +170,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void searchByTitle() {
+    public void searchByTitleTest() {
         String keywords="phone";
         List<Product> list = Arrays.asList(product, product1, product2, product3);
         Page<Product> page =new PageImpl<>(list);
@@ -185,7 +185,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void createWithCategory() {
+    public void createWithCategoryTest() {
         String categoryId="catId";
         Category  category = Category.builder()
                 .title("Mobile")
@@ -204,7 +204,7 @@ class ProductServiceTest {
     }
 
     @Test
-    public void updateCategory() {
+    public void updateCategoryTest() {
         String  productId="productId";
         String categoryId="catId";
         ProductDto productDto = ProductDto.builder()
@@ -229,6 +229,7 @@ class ProductServiceTest {
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
 
         ProductDto productDto1 = productService.updateCategory(productId, categoryId);
+        System.out.println(productDto1.getPrice());
         Assertions.assertNotNull(productDto1);
         Assertions.assertEquals(product.getTitle(),productDto1.getTitle(),"Title is not validated");
     }

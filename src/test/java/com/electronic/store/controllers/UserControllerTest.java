@@ -85,7 +85,7 @@ class UserControllerTest {
         this.mockMvc.perform(
                         MockMvcRequestBuilders.put("/users" +userId)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(convertObjectToJsonString(user))
+                                .content(convertObjectToJsonString(userDto))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
