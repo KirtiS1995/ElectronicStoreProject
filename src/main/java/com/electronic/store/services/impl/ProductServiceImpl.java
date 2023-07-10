@@ -249,4 +249,5 @@ public class ProductServiceImpl implements ProductService {
         log.info("Request Entering DAO call forgetting product  of similar category  with categoryId :{} ",categoryId);
         return Helper.getPageableResponse(page,ProductDto.class);
     }
+
 }

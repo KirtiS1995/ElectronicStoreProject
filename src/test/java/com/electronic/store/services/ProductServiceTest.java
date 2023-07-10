@@ -7,6 +7,7 @@ import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Category;
 import com.electronic.store.entities.Product;
 import com.electronic.store.entities.User;
+import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.repositories.ProductRepository;
 import com.electronic.store.repositories.UserRepository;
@@ -87,6 +88,11 @@ class ProductServiceTest {
                 .live(true)
                 .stock(false)
                 .productImage("abc.png")
+                .build();
+        Category  category = Category.builder()
+                .title("TV")
+                .description("Category related to TV")
+                .coverImage("xyz.png")
                 .build();
          }
 
@@ -187,27 +193,36 @@ class ProductServiceTest {
     @Test
     public void createWithCategoryTest() {
         String categoryId="catId";
+
         Category  category = Category.builder()
                 .title("Mobile")
                 .description("Category related to mobile")
                 .coverImage("xyz.png")
                 .build();
 
-        Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
+//        Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
+        Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
-
         ProductDto productdto = this.mapper.map(product, ProductDto.class);
-       productService.createWithCategory(productdto, categoryId);
-        Assertions.assertEquals(product.getPrice(),productdto.getPrice(),"Failed ");
-
+        ProductDto productDto1 = productService.createWithCategory(productdto, categoryId);
+        assertNotNull(productDto1);
+        System.out.println(productDto1.getTitle());
+        assertEquals(productDto1.getPrice(),productdto.getPrice(),"Failed ");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.createWithCategory(productdto,"categoryId"));
     }
 
     @Test
-    public void updateCategoryTest() {
-        String  productId="productId";
-        String categoryId="catId";
-        ProductDto productDto = ProductDto.builder()
+    public void updateCategoryWithProductTest() {
+        String  productId="123";
+        String categoryId="12345";
+
+        Category category1 = Category.builder()
+                .title("Mobile")
+                .description("Category related to mobile")
+                .coverImage("xyz.png")
+                .build();
+        Product product4 = Product.builder()
                 .title("Iphone")
                 .description("Phone having good camera")
                 .price(120000)
@@ -216,22 +231,18 @@ class ProductServiceTest {
                 .live(true)
                 .stock(false)
                 .productImage("xyz.png")
+                .category(category)
                 .build();
 
-        Category category = Category.builder()
-                .title("Mobile")
-                .description("Category related to mobile")
-                .coverImage("xyz.png")
-                .build();
-
-        Mockito.when(categoryRepository.findById(Mockito.anyString())).thenReturn(Optional.of(category));
-        Mockito.when(productRepository.findById(Mockito.anyString())).thenReturn(Optional.of(product));
-        Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category1));
+        Mockito.when(productRepository.save(Mockito.any())).thenReturn(product4);
 
         ProductDto productDto1 = productService.updateCategory(productId, categoryId);
-        System.out.println(productDto1.getPrice());
+
+//        System.out.println(productDto1.getPrice());
         Assertions.assertNotNull(productDto1);
-        Assertions.assertEquals(product.getTitle(),productDto1.getTitle(),"Title is not validated");
+        Assertions.assertEquals(category.getTitle(),productDto1.getTitle(),"Title is not validated");
     }
 
 
