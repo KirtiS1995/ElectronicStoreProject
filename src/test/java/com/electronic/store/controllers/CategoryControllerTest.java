@@ -83,7 +83,20 @@ class CategoryControllerTest {
             }
 
     @Test
-    void getSingleCategoryTest() {
+    void getSingleCategoryTest() throws Exception {
+
+        String categoryId ="555";
+        CategoryDto categoryDto = this.mapper.map(category, CategoryDto.class);
+        Mockito.when(categoryService.getSingleCategory(Mockito.anyString())).thenReturn(categoryDto);
+//        Mockito.when(userService.getUserById(userId)).thenReturn(userDto);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/categories/"+categoryId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").exists());
+
     }
 
     @Test
