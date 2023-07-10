@@ -1,5 +1,6 @@
 package com.electronic.store.controllers;
 
+import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Category;
 import com.electronic.store.entities.User;
@@ -48,14 +49,14 @@ class CategoryControllerTest {
                 .build();
     }
     @Test
-    void createTest() {
-        UserDto dto = mapper.map(user, UserDto.class);
-        Mockito.when(userService.createUser(Mockito.any())).thenReturn(dto);
+    void createTest() throws Exception {
+        CategoryDto dto = mapper.map(category, CategoryDto.class);
+        Mockito.when(categoryService.create(Mockito.any())).thenReturn(dto);
         //actual request for url
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users")
+                        MockMvcRequestBuilders.post("/categories/")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(convertObjectToJsonString(user))
+                                .content(convertObjectToJsonString(category))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
