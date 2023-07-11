@@ -269,9 +269,9 @@ class ProductControllerTest {
         pageableResponse.setContent(Arrays.asList(productDto1,productDto2,productDto3));
         pageableResponse.setTotalPages(200);
         pageableResponse.setPageSize(20);
-//
 
-        Mockito.when(productService.searchByTitle(subTitle,Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pageableResponse);
+
+        Mockito.when(productService.searchByTitle(Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pageableResponse);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/products/search/"+subTitle)
                                 .contentType(MediaType.APPLICATION_JSON)
