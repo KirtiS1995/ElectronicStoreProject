@@ -36,6 +36,7 @@ class ProductServiceTest {
 
     @MockBean
     private CategoryRepository categoryRepository;
+
     @Autowired
     private ModelMapper mapper;
 

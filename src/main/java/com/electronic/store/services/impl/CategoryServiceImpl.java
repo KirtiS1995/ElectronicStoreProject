@@ -2,9 +2,7 @@ package com.electronic.store.services.impl;
 
 import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.PageableResponse;
-import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Category;
-import com.electronic.store.entities.User;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
 import com.electronic.store.helper.Helper;
