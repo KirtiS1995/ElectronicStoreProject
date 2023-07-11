@@ -2,12 +2,12 @@ package com.electronic.store.controllers;
 
 import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.PageableResponse;
-import com.electronic.store.dtos.UserDto;
+import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.entities.Category;
-import com.electronic.store.entities.User;
+import com.electronic.store.entities.Product;
 import com.electronic.store.repositories.CategoryRepository;
 import com.electronic.store.services.CategoryService;
-import com.electronic.store.services.UserService;
+import com.electronic.store.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,9 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CategoryControllerTest {
 
     private Category category;
+    private Product product;
 
      @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private ProductService productService;
 
     @Autowired
     private ModelMapper mapper;
@@ -50,6 +51,16 @@ class CategoryControllerTest {
                 .title("TV")
                 .description("Category realted to TV")
                 .coverImage("xyz.png")
+                .build();
+        product = Product.builder()
+                .title("Samsung")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("abc.png")
                 .build();
     }
     @Test
@@ -181,10 +192,112 @@ class CategoryControllerTest {
     }
 
     @Test
-    public void createProductWithCatgeory()
-    {
-
+    public void createProductWithCategory() throws Exception {
+        String categoryId="abc";
+        ProductDto dto = mapper.map(product, ProductDto.class);
+        Mockito.when(productService.createWithCategory(Mockito.any(),Mockito.anyString())).thenReturn(dto);
+        //actual request for url
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/categories/"+categoryId+"/products")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(product))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").exists());
     }
+    @Test
+    public void updateCategoryOfProduct() throws Exception {
+        String categoryId="abc";
+        String productId="12345";
+        CategoryDto category3 =CategoryDto.builder()
+                .title("mobile")
+                .description("Category related to mobile")
+                .coverImage("Mob.png")
+                .build();
+        ProductDto productDto = ProductDto.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .category(category3)
+                .build();
+//        ProductDto productDto = mapper.map(product, ProductDto.class);
+        Mockito.when(productService.updateCategory(Mockito.anyString(),Mockito.anyString())).thenReturn(productDto);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.put("/categories/"+categoryId+"/products/"+productId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(product))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    void getProductOfCategoryTest() throws Exception {
+        String categoryId="abc";
+        CategoryDto category =CategoryDto.builder()
+                .title("mobile")
+                .description("Category related to mobile")
+                .coverImage("Mob.png")
+                .build();
+        ProductDto product1= ProductDto.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .category(category)
+                .build();
+        ProductDto product2 = ProductDto.builder()
+                .title("MI")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("abc.png")
+                .category(category)
+                .build();
+        ProductDto product3= ProductDto.builder()
+                .title("Iphone")
+                .description("Phone having good camera")
+                .price(120000)
+                .discountedPrice(10000)
+                .quantity(40)
+                .live(true)
+                .stock(false)
+                .productImage("xyz.png")
+                .category(category)
+                .build();
+
+        PageableResponse<ProductDto> pageableResponse= new PageableResponse<>();
+
+        pageableResponse.setLastPage(false);
+        pageableResponse.setTotalElements(2000);
+        pageableResponse.setPageNumber(50);
+        pageableResponse.setContent(Arrays.asList(product1,product2,product3));
+        pageableResponse.setTotalPages(200);
+        pageableResponse.setPageSize(20);
+
+        Mockito.when(productService.getAllOfCategory(Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pageableResponse);
+
+        //request for url
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/categories/"+categoryId+"/products")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
 
     private String convertObjectToJsonString(Object user) {
         try {
