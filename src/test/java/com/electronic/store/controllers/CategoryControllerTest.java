@@ -180,6 +180,12 @@ class CategoryControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void createProductWithCatgeory()
+    {
+
+    }
+
     private String convertObjectToJsonString(Object user) {
         try {
             return new ObjectMapper().writeValueAsString(user);
