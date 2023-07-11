@@ -1,9 +1,7 @@
 package com.electronic.store.controllers;
 
-import com.electronic.store.dtos.CategoryDto;
 import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.ProductDto;
-import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.Product;
 import com.electronic.store.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,9 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.Arrays;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
