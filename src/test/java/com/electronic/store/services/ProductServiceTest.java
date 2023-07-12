@@ -237,11 +237,11 @@ class ProductServiceTest {
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category1));
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product4);
-        ProductDto productDto1 = productService.updateCategory(productId, categoryId);
+        ProductDto productDto1 = productService.updateProductWithCategory(productId, categoryId);
         System.out.println(productDto1.getCategory().getTitle());
         Assertions.assertNotNull(productDto1);
         Assertions.assertEquals(category1.getCategoryId(),productDto1.getProductId());
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateCategory(productId,"1234"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateProductWithCategory(productId,"1234"));
     }
 
     @Test

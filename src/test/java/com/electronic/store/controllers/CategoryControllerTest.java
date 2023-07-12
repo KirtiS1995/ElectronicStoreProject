@@ -226,7 +226,7 @@ class CategoryControllerTest {
                 .productImage("xyz.png")
                 .category(category3)
                 .build();
-        Mockito.when(productService.updateCategory(Mockito.anyString(),Mockito.anyString())).thenReturn(productDto);
+        Mockito.when(productService.updateProductWithCategory(Mockito.anyString(),Mockito.anyString())).thenReturn(productDto);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.put("/categories/"+categoryId+"/products/"+productId)
                                 .contentType(MediaType.APPLICATION_JSON)
