@@ -232,20 +232,69 @@ class ProductServiceTest {
                 .live(true)
                 .stock(false)
                 .productImage("xyz.png")
-                .category(category)
+                .category(category1)
                 .build();
-
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category1));
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(product4);
-
-        ProductDto productDto1 = productService.updateCategory(productId, categoryId);
-
-        System.out.println(productDto1.getPrice());
+        ProductDto productDto1 = productService.updateProductWithCategory(productId, categoryId);
+        System.out.println(productDto1.getCategory().getTitle());
         Assertions.assertNotNull(productDto1);
         Assertions.assertEquals(category1.getCategoryId(),productDto1.getProductId());
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateCategory(productId,"1234"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateProductWithCategory(productId,"1234"));
     }
 
+    @Test
+    public void getAllOfCategoryTest() {
+    String categoryId = "abc";
+    Category category = Category.builder()
+            .title("mobile")
+            .description("Category related to mobile")
+            .coverImage("Mob.png")
+            .build();
+    Product product1 = Product.builder()
+            .title("Iphone")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("xyz.png")
+            .category(category)
+            .build();
+    Product product2 = Product.builder()
+            .title("MI")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("abc.png")
+            .category(category)
+            .build();
+    Product product3 = Product.builder()
+            .title("Iphone")
+            .description("Phone having good camera")
+            .price(120000)
+            .discountedPrice(10000)
+            .quantity(40)
+            .live(true)
+            .stock(false)
+            .productImage("xyz.png")
+            .category(category)
+            .build();
+    Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+    List<Product> list = Arrays.asList(product1, product2, product3);
+    Page<Product> page =new PageImpl<>(list);
+    Mockito.when(productRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+    Mockito.when(productRepository.findByCategory(Mockito.any(),Mockito.any())).thenReturn(page);
+
+    PageableResponse<ProductDto> allOfCategory = productService.getAllOfCategory(categoryId, 1, 2, "title", "asc");
+    Assertions.assertNotNull(allOfCategory);
+        System.out.println(allOfCategory.getContent().size());
+        Assertions.assertSame(allOfCategory.getContent().size(), list.size());
+}
 
 }

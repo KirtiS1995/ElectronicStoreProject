@@ -226,8 +226,7 @@ class CategoryControllerTest {
                 .productImage("xyz.png")
                 .category(category3)
                 .build();
-//        ProductDto productDto = mapper.map(product, ProductDto.class);
-        Mockito.when(productService.updateCategory(Mockito.anyString(),Mockito.anyString())).thenReturn(productDto);
+        Mockito.when(productService.updateProductWithCategory(Mockito.anyString(),Mockito.anyString())).thenReturn(productDto);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.put("/categories/"+categoryId+"/products/"+productId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -286,9 +285,7 @@ class CategoryControllerTest {
         pageableResponse.setContent(Arrays.asList(product1,product2,product3));
         pageableResponse.setTotalPages(200);
         pageableResponse.setPageSize(20);
-
         Mockito.when(productService.getAllOfCategory(Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pageableResponse);
-
         //request for url
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/categories/"+categoryId+"/products")
@@ -297,7 +294,6 @@ class CategoryControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
 
     private String convertObjectToJsonString(Object user) {
         try {
