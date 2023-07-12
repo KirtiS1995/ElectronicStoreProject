@@ -219,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public ProductDto updateCategory(String productId, String categoryId) {
+    public ProductDto updateProductWithCategory(String productId, String categoryId) {
 
         log.info("Request Entering DAO call for Updating category of product with categoryId :{} ",categoryId);
         //product fetch

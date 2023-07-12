@@ -196,7 +196,7 @@ public class CategoryController {
                                                               @PathVariable String productId)
     {
         logger.info("Request entering for updating product with category:{}",productId);
-        ProductDto productDto = productService.updateCategory(productId, categoryId);
+        ProductDto productDto = productService.updateProductWithCategory(productId, categoryId);
         logger.info("Complete Request for updating product with category:{}",productId);
         return new ResponseEntity<>(productDto,HttpStatus.OK);
     }
