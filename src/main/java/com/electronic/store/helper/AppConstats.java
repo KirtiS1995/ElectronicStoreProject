@@ -9,6 +9,10 @@ public class AppConstats {
 
     public static final String EMAIL_NOT_FOUND="User Not Found With given Email ID   ";
 
+    public static final String CART_NOT_FOUND="Cart Not Found With given items..  ";
+
+    public static final String QUANTITY_NOT_VALID="REquested quantity is not valid..  ";
+
     public static final String PAGE_NUMBER="0";
 
     public static final String PAGE_SIZE="10";
