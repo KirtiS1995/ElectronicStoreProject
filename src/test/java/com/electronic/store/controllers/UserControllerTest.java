@@ -4,7 +4,6 @@ import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.dtos.UserDto;
 import com.electronic.store.entities.User;
 import com.electronic.store.services.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
