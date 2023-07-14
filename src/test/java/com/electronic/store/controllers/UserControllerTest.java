@@ -16,12 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,7 +68,7 @@ class UserControllerTest {
 
     @Test
     public void updateUserTest() throws Exception {
-        //User/{usrrId}  +PUT request +json
+        //User/{userId}  +PUT request +json
         String userId ="123";
        UserDto userDto = UserDto.builder()
                 .name("kirti salunke")
@@ -82,7 +78,7 @@ class UserControllerTest {
                 .about("Testing method for create")
                 .imageName("xyz.png")
                 .build();
-       //        UserDto dto = mapper.map(user, UserDto.class);
+//               UserDto userDto = mapper.map(user, UserDto.class);
         Mockito.when(userService.updateUser(Mockito.any(),Mockito.anyString())).thenReturn(userDto);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.put("/users/" +userId)
