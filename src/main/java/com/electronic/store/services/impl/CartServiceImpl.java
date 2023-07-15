@@ -85,7 +85,7 @@ public class CartServiceImpl implements CartService {
             //create items
             CartItem cartItem = CartItem.builder()
                     .quantity(quantity)
-                    .totalPrices(quantity * product.getPrice())
+                    .totalPrices(quantity * product.getDiscountedPrice())
                     .cart(cart)
                     .product(product)
                     .build();
