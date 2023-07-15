@@ -73,7 +73,7 @@ public class CartServiceImpl implements CartService {
             if (item.getProduct().getProductId().equals(productId)) {
                 //item already present in cart
                 item.setQuantity(quantity);
-                item.setTotalPrices(quantity*product.getPrice());
+                item.setTotalPrices(quantity*product.getDiscountedPrice());
                 updated.set(true);
             }
             return item;
