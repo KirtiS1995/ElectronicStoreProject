@@ -49,8 +49,6 @@ public class CartServiceImpl implements CartService {
         {
             throw new BadApiRequestException(AppConstats.QUANTITY_NOT_VALID);
         }
-
-
     //Fetch product
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND));
 
