@@ -19,15 +19,15 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDto {
+public class CartDto extends BaseEntityDto {
 
     private String cartId;
 
     private Date createdAt;
 
-    private User user;
+    private UserDto user;
 
-    private List<CartItem> cartItem = new ArrayList<>();
+    private List<CartItemDto> cartItem = new ArrayList<>();
 
 }
 

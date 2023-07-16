@@ -11,11 +11,7 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Table(name = "cart_items")
-public class CartItem {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cartItemId;
+public class CartItem extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name = "product_id")
@@ -25,7 +21,11 @@ public class CartItem {
 
     private Integer totalPrices;
 
-    @ManyToOne
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer cartItemId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private  Cart cart;
 

@@ -10,11 +10,11 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemDto {
+public class CartItemDto extends BaseEntityDto {
 
     private Integer cartItemId;
 
-    private Product product;
+    private ProductDto product;
 
     private Integer quantity;
 
