@@ -12,6 +12,8 @@ public interface CartService {
 
     //remove items from cart
     void removeItemFromCart(String userId,int cartItem);
+=======
+    void removeItemToCart(String userId,int cartItem);
 
     //remove all items from cart
     void clearCart(String userId);

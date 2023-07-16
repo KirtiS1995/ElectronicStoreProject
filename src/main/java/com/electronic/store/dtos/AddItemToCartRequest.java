@@ -15,5 +15,9 @@ public class AddItemToCartRequest {
     private String productId;
 
     private Integer quantity;
+=======
+private String productId;
+
+private  int quantity;
 
 }

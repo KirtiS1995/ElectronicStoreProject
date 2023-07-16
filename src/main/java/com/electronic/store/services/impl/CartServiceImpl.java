@@ -17,12 +17,14 @@ import com.electronic.store.services.CartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+=======
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
+=======
 public class CartServiceImpl implements CartService {
 
     @Autowired
@@ -49,6 +51,9 @@ public class CartServiceImpl implements CartService {
         {
             throw new BadApiRequestException(AppConstats.QUANTITY_NOT_VALID);
         }
+=======
+
+
     //Fetch product
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND));
 
@@ -74,6 +79,8 @@ public class CartServiceImpl implements CartService {
                 //item already present in cart
                 item.setQuantity(quantity);
                 item.setTotalPrices(quantity*product.getDiscountedPrice());
+=======
+                item.setTotalPrices(quantity*product.getPrice());
                 updated.set(true);
             }
             return item;
@@ -86,6 +93,8 @@ public class CartServiceImpl implements CartService {
             CartItem cartItem = CartItem.builder()
                     .quantity(quantity)
                     .totalPrices(quantity * product.getDiscountedPrice())
+=======
+                    .totalPrices(quantity * product.getPrice())
                     .cart(cart)
                     .product(product)
                     .build();
@@ -98,6 +107,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeItemFromCart(String userId, int cartItem) {
+=======
+    public void removeItemToCart(String userId, int cartItem) {
         CartItem cartItem1 = cartItemRepository.findById(cartItem).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND));
         cartItemRepository.delete(cartItem1);
     }
