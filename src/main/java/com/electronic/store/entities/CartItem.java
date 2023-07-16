@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Table(name = "cart_items")
-public class CartItem {
+public class CartItem extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name = "product_id")
