@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDto {
+public class CartDto extends BaseEntityDto {
 
     private String cartId;
 

@@ -14,18 +14,18 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "cart")
-public class Cart {
+public class Cart extends BaseEntity {
 
     @Id
     private String cartId;
 
-    private Date createdAt;
+//    private Date createdAt;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private  List<CartItem> cartItem = new ArrayList<>();
 
 }
