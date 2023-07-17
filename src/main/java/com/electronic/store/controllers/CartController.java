@@ -5,6 +5,7 @@ import com.electronic.store.dtos.CartDto;
 import com.electronic.store.helper.ApiResponse;
 import com.electronic.store.helper.AppConstats;
 import com.electronic.store.services.CartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
+@Slf4j
 public class CartController {
 
     @Autowired
@@ -28,7 +30,9 @@ public class CartController {
     @PostMapping("/{userId}")
     public ResponseEntity<CartDto> addItemToCart(@PathVariable String userId, @RequestBody AddItemToCartRequest request)
     {
+        log.info("Request entering for adding item to cart for userId :{}",userId);
         CartDto cartDto = cartService.addItemToCart(userId, request);
+        log.info("Request completed  for adding item to cart for userId :{}",userId);
         return new   ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 
@@ -42,12 +46,14 @@ public class CartController {
     @DeleteMapping("/{userId}/items/{itemId}")
     public ResponseEntity<ApiResponse> removeItemFromCart(@PathVariable String userId, @PathVariable int itemId)
     {
+        log.info("Request entering for removing  item from user's cart with userId :{}",userId);
         cartService.removeItemFromCart(userId,itemId);
         ApiResponse response = ApiResponse.builder().message(AppConstats.CART_REMOVED)
                 .success(true)
                 .status(HttpStatus.OK)
                 .build();
-            return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
+        log.info("Request completed for removing  item from user's cart with userId :{}",userId);
+        return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
     }
 
     /**
@@ -59,11 +65,13 @@ public class CartController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse> clearCart(@PathVariable String userId)
     {
+        log.info("Request entering for clearing user's cart with userId :{}",userId);
         cartService.clearCart(userId);
         ApiResponse response = ApiResponse.builder().message(AppConstats.CART_BLANK)
                 .success(true)
                 .status(HttpStatus.OK)
                 .build();
+        log.info("Request completed for clearing user's cart with userId :{}",userId);
         return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
     }
 
@@ -76,7 +84,9 @@ public class CartController {
         @GetMapping("/{userId}")
         public ResponseEntity<CartDto> getCart(@PathVariable String userId)
         {
+            log.info("Request entering for getting user's cart with userId :{}",userId);
             CartDto cartDto = cartService.getCartByUSer(userId);
+            log.info("Request completed for getting user's cart with userId :{}",userId);
             return new ResponseEntity<>(cartDto, HttpStatus.OK);
         }
 
