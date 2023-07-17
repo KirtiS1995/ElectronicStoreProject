@@ -206,6 +206,7 @@ public class ProductServiceImpl implements ProductService {
         String productId = UUID.randomUUID().toString();
         product.setProductId(productId);
         product.setAddedDate(new Date());
+        product.setProductImage(productDto.getProductImage());
         product.setCategory(category);
         Product savedProduct = this.productRepo.save(product);
         log.info("Request completed DAO call for creating product with categoryId :{} ",categoryId);
