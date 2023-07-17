@@ -15,115 +15,116 @@ import com.electronic.store.repositories.ProductRepository;
 import com.electronic.store.repositories.UserRepository;
 import com.electronic.store.services.CartService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-=======
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-@Service
-=======
 public class CartServiceImpl implements CartService {
-
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
+    private UserRepository userRepo;
     @Autowired
     private CartRepository cartRepository;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private ModelMapper mapper;
 
     @Autowired
-    private ModelMapper mapper;
+    private CartItemRepository cartItemRepository;
+
+    private static  final Logger logger= LoggerFactory.getLogger(CartServiceImpl.class);
+
 
     @Override
     public CartDto addItemToCart(String userId, AddItemToCartRequest request) {
-        int quantity = request.getQuantity();
+        logger.info("Dao Request initialized for adding item to cart ");
         String productId = request.getProductId();
 
-        if(quantity<=0)
+        Integer quantity = request.getQuantity();
+            if (quantity<=0)
         {
-            throw new BadApiRequestException(AppConstats.QUANTITY_NOT_VALID);
+            throw new BadApiRequestException("Requested Quantity is not valid!!");
         }
-=======
+        //Fetch The product
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND+productId));
 
+            //fetch the User from Database
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
 
-    //Fetch product
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.PRODUCT_NOT_FOUND));
-
-        //fetch USer
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
-
-        Cart cart = null;
+        Cart cart=null;
         try {
+            logger.info("Find Cart BY User");
             cart = cartRepository.findByUser(user).get();
         }catch (NoSuchElementException e)
         {
-            cart = new Cart();
+            logger.info("If Cart Not Available then Create New Cart");
+            cart=new  Cart();
             cart.setCartId(UUID.randomUUID().toString());
             cart.setCreatedAt(new Date());
+
         }
-        //perform cart operation
-        //If cart item already present,then update
-        AtomicReference<Boolean> updated= new AtomicReference<>(false);
-        List<CartItem> items = cart.getCartItem();
-        List<CartItem> updatedItems = items.stream().map(item ->
-        {
-            if (item.getProduct().getProductId().equals(productId)) {
-                //item already present in cart
-                item.setQuantity(quantity);
-                item.setTotalPrices(quantity*product.getDiscountedPrice());
-=======
-                item.setTotalPrices(quantity*product.getPrice());
-                updated.set(true);
-            }
-            return item;
-        }).collect(Collectors.toList());
 
-        cart.setCartItem(updatedItems);
+        //Perform Cart Operation
+        //If Cart item Already Present Then update Cart
+        AtomicBoolean updated= new AtomicBoolean(false);
+        Set<CartItem> cartItem = cart.getCartItem();
+        logger.info("If Cart Already exists then update cart");
+        Set<CartItem> updatedList = cartItem.stream().map(item -> {
+                    if (item.getProduct().getProductId().equals(productId)) {
+                        //product Already present
+                        item.setQuantity(quantity);
+                        item.setTotalPrices(quantity * product.getPrice());
+                        updated.set(true);
+                    }
+                    return item;
+                }
 
-    if (!updated.get()){
-            //create items
-            CartItem cartItem = CartItem.builder()
-                    .quantity(quantity)
-                    .totalPrices(quantity * product.getDiscountedPrice())
-=======
-                    .totalPrices(quantity * product.getPrice())
-                    .cart(cart)
-                    .product(product)
-                    .build();
-    cart.getCartItem().add(cartItem);
-}
+        ).collect(Collectors.toSet());
+
+        //cart.setCartItem(updatedList);
+        cart.getCartItem().addAll(updatedList);
+        if(!updated.get()) {
+            CartItem item = CartItem.builder().quantity(quantity).product(product).cart(cart)
+                    .totalPrices(quantity * product.getPrice()).build();
+
+            cart.getCartItem().add(item);
+
+        }
         cart.setUser(user);
-        Cart updatedCart = cartRepository.save(cart);
-        return mapper.map(updatedCart,CartDto.class);
-    }
+        cart.setLastModifiedBy(user.getName());
+        cart.setCreatedBy(user.getName());
+        cart.setIsActive("True");
+        Cart cart1= cartRepository.save(cart);
+        logger.info("Dao Request completed for adding item to cart ");
+        return mapper.map(cart1,CartDto.class);    }
 
     @Override
     public void removeItemFromCart(String userId, int cartItem) {
-=======
+
+    }
+
+    @Override
     public void removeItemToCart(String userId, int cartItem) {
-        CartItem cartItem1 = cartItemRepository.findById(cartItem).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND));
-        cartItemRepository.delete(cartItem1);
+
     }
 
     @Override
     public void clearCart(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
-        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND));
-        cart.getCartItem().clear();
-        cartRepository.save(cart);
+
     }
 
     @Override
     public CartDto getCartByUSer(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND));
         return mapper.map(cart,CartDto.class);
     }
