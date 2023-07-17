@@ -43,6 +43,13 @@ public class CartServiceImpl implements CartService {
 
     private static  final Logger logger= LoggerFactory.getLogger(CartServiceImpl.class);
 
+    /**
+     * @author Kirti
+     * @implNote This method is for adding item to cart
+     * @param userId
+     * @param request
+     * @return
+     */
     @Override
     public CartDto addItemToCart(String userId, AddItemToCartRequest request) {
         logger.info("Dao Request initialized for adding item to cart ");
@@ -103,6 +110,12 @@ public class CartServiceImpl implements CartService {
         logger.info("Dao Request completed for adding item to cart ");
         return mapper.map(cart1,CartDto.class);    }
 
+    /**
+     * @author Kirti
+     * @implNote  Method for removing item from  cart
+     * @param userId
+     * @param cartItemId
+     */
     @Override
     public void removeItemFromCart(String userId, int cartItemId) {
         logger.info("Dao Request initialized for removing item from cart :{}",cartItemId);
@@ -111,6 +124,11 @@ public class CartServiceImpl implements CartService {
         logger.info("Dao Request completed for removing item from cart :{}",cartItemId);
     }
 
+    /**
+     * @implNote Method for clearing cart
+     * @author Kirti
+     * @param userId
+     */
     @Override
     public void clearCart(String userId) {
         logger.info("Dao Request initialized to clear cart :{}",userId);
@@ -121,6 +139,12 @@ public class CartServiceImpl implements CartService {
         logger.info("Dao Request completed to clear cart :{}",userId);
     }
 
+    /**
+     * @author Kirti
+     * @implNote Method for getting cart by user
+     * @param userId
+     * @return
+     */
     @Override
     public CartDto getCartByUSer(String userId) {
         logger.info("Dao Request initialized to get cart by user :{}",userId);
