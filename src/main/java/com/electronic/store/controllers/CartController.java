@@ -35,8 +35,9 @@ public class CartController {
                 .build();
             return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
     }
+
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponse> clearCart(@PathVariable String userId, @PathVariable int itemId)
+    public ResponseEntity<ApiResponse> clearCart(@PathVariable String userId)
     {
         cartService.clearCart(userId);
         ApiResponse response = ApiResponse.builder().message(AppConstats.CART_BLANK)
@@ -45,6 +46,7 @@ public class CartController {
                 .build();
         return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
     }
+
         @GetMapping("/{userId}")
         public ResponseEntity<CartDto> getCart(@PathVariable String userId)
         {
