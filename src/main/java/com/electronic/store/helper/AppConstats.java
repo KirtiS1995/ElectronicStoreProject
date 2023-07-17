@@ -16,8 +16,6 @@ public class AppConstats {
     public static final String CART_REMOVED = "Item is removed from cart. ";
 
     public static final String CART_BLANK = "Now cart is blank. ";
-=======
-    public static final String QUANTITY_NOT_VALID="REquested quantity is not valid..  ";
 
     public static final String PAGE_NUMBER="0";
 

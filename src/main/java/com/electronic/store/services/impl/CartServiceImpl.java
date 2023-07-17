@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -25,7 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
+@Service
 public class CartServiceImpl implements CartService {
     @Autowired
     private ProductRepository productRepository;
@@ -132,8 +133,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void clearCart(String userId) {
         logger.info("Dao Request initialized to clear cart :{}",userId);
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not Found"));
-        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException("Cart not found For User"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
+        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND));
         cart.getCartItem().clear();
         cartRepository.save(cart);
         logger.info("Dao Request completed to clear cart :{}",userId);
@@ -153,4 +154,5 @@ public class CartServiceImpl implements CartService {
         logger.info("Dao Request completed to get cart by user :{}",userId);
         return mapper.map(cart,CartDto.class);
     }
+
 }
