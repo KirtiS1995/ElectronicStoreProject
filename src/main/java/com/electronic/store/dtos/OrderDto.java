@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 public class OrderDto extends BaseEntityDto{
 
     private String orderId;
@@ -25,18 +24,18 @@ public class OrderDto extends BaseEntityDto{
 
     @NotBlank(message = "Billing address required..!")
     private String billingAddress;
-
-    @NotBlank(message = "Billing Phone required..!")
     private  String billingPhone;
-
-    @NotBlank(message = "Billing Name required..!")
     private String billingName;
 
-    private Date orderDate= new Date();
+    private Date orderDate;
     private Date deliveryDate;
 
-//    private UserDto user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_Id")
+    private User user;
 
-    private List<OrderItemDto> orderItem = new ArrayList<>();
+    @OneToMany(mappedBy = "order",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "order_orderItems")
+    private List<OrderItem> orderItem = new ArrayList<OrderItem>();
 
 }
