@@ -154,5 +154,4 @@ public class CartServiceImpl implements CartService {
         logger.info("Dao Request completed to get cart by user :{}",userId);
         return mapper.map(cart,CartDto.class);
     }
-
 }
