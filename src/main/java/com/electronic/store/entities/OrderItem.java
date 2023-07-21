@@ -28,6 +28,6 @@ public class OrderItem {
     private Order order;
 
     @OneToOne
-    @JoinColumn(name = "product_Id")
+    @JoinColumn(name = "productId")
     private Product product;
 }
