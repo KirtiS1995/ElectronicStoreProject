@@ -18,16 +18,26 @@ public class Order extends BaseEntity{
 
     @Id
     private String orderId;
+
+    //Pending,Dispatched,delivered
+    //Enum
     @Column(name = "order_status")
     private String orderStatus;
+
+    //enum
+    //Boolean   False->Not paid  true-> PAID
     @Column(name = "payment_status")
     private String paymentStatus;
+
     @Column(name = "order_amount")
     private int orderAmount;
-    @Column(name = "billing_address")
+
+    @Column(length = 1000,name = "billing_address")
     private String billingAddress;
+
     @Column(name = "billing_phone")
     private  String billingPhone;
+
     @Column(name = "billing_name")
     private String billingName;
 
@@ -38,7 +48,7 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_Id")
     private User user;
 
-    @OneToMany(mappedBy = "order",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "order",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "order_orderItems")
     private List<OrderItem> orderItem = new ArrayList<OrderItem>();
 }
