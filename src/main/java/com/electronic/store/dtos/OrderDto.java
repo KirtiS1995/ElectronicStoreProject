@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString
 public class OrderDto extends BaseEntityDto{
 
     private String orderId;
@@ -31,10 +32,10 @@ public class OrderDto extends BaseEntityDto{
     @NotBlank(message = "Billing Name required..!")
     private String billingName;
 
-    private Date orderDate;
+    private Date orderDate= new Date();
     private Date deliveryDate;
 
-    private UserDto user;
+//    private UserDto user;
 
     private List<OrderItemDto> orderItem = new ArrayList<>();
 

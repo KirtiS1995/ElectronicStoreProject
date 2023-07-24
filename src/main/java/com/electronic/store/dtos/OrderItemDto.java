@@ -1,9 +1,15 @@
 package com.electronic.store.dtos;
 
-import com.electronic.store.entities.Product;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@ToString
 public class OrderItemDto {
     private Integer orderItemId;
 
@@ -12,5 +18,5 @@ public class OrderItemDto {
 
     private int totalPrize;
 
-    private Product product;
+    private ProductDto product;
 }
