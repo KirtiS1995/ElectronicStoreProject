@@ -49,6 +49,5 @@ public class Order extends BaseEntity{
     private User user;
 
     @OneToMany(mappedBy = "order",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_orderItems")
     private List<OrderItem> orderItem = new ArrayList<OrderItem>();
 }
