@@ -24,18 +24,18 @@ public class OrderDto extends BaseEntityDto{
 
     @NotBlank(message = "Billing address required..!")
     private String billingAddress;
+
+    @NotBlank(message = "Billing Phone required..!")
     private  String billingPhone;
+
+    @NotBlank(message = "Billing Name required..!")
     private String billingName;
 
     private Date orderDate;
     private Date deliveryDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_Id")
-    private User user;
+    private UserDto user;
 
-    @OneToMany(mappedBy = "order",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "order_orderItems")
-    private List<OrderItem> orderItem = new ArrayList<OrderItem>();
+    private List<OrderItemDto> orderItem = new ArrayList<>();
 
 }
