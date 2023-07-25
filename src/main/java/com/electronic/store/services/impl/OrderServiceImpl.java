@@ -7,6 +7,7 @@ import com.electronic.store.entities.*;
 import com.electronic.store.exceptions.BadApiRequestException;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.helper.AppConstats;
+import com.electronic.store.helper.Helper;
 import com.electronic.store.repositories.*;
 import com.electronic.store.services.OrderService;
 import org.modelmapper.ModelMapper;
@@ -126,12 +127,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageableResponse<OrderDto> getOrders(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable= PageRequest.of(pageNo-1, pageSize, sort);
+    public PageableResponse<OrderDto> getOrders(int pageNumber, int pageSize, String sortBy, String sortDir) {
 
-        Page<Order> page = orderRepository.findAll(pageable);
+        Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        final Page<Order> orders = orderRepository.findAll(pageable);
+        return Helper.getPageableResponse(orders,OrderDto.class);
 
-        return PageableResponse.getPageableResponse(page, OrderDto.class);
     }
 }
