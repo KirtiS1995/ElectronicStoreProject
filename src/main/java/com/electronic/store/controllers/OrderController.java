@@ -20,6 +20,12 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * @author Kirti
+     * @apiNote  This api for creating order
+     * @param request
+     * @return
+     */
     @PostMapping("/")
     public ResponseEntity<OrderDto> createOrder(@RequestBody CreateOrderRequest request){
         OrderDto order = orderService.createOrder(request);
