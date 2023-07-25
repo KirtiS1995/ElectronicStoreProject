@@ -32,6 +32,12 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
+    /**
+     * @author Kirti
+     * @apiNote  This api for removing order of user
+     * @param orderId
+     * @return
+     */
     @DeleteMapping("/{orderId}")
     public ResponseEntity<ApiResponse> removeOrder(@PathVariable String orderId){
         orderService.removeOrder(orderId);
@@ -39,6 +45,12 @@ public class OrderController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    /**
+     * @author kirti
+     * @apiNote This api is for getting order of user
+     * @param userId
+     * @return
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<OrderDto>> getOrdersOfUser(@PathVariable String userId){
         List<OrderDto> ordersOfUser = orderService.getOrdersOfUser(userId);
