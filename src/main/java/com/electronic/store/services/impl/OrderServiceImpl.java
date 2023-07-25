@@ -49,7 +49,12 @@ public class OrderServiceImpl implements OrderService {
 
     private static Logger logger= LoggerFactory.getLogger(OrderServiceImpl.class);
 
-
+    /**
+     * @author Kirti
+     * @implNote this method is for creating order
+     * @param orderDto
+     * @return
+     */
     @Override
     public OrderDto createOrder(CreateOrderRequest orderDto) {
         String userId = orderDto.getUserId();
@@ -109,12 +114,23 @@ public class OrderServiceImpl implements OrderService {
         return mapper.map(saveOrder,OrderDto.class);
     }
 
+    /**
+     *  @author Kirti
+     *  @implNote this method is for removing order
+     * @param orderId
+     */
     @Override
     public void removeOrder(String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order is not found with id: " + orderId));
         orderRepository.delete(order);
     }
 
+    /**
+     *  @author Kirti
+     *  @implNote this method is for getting all orders of userr
+     * @param userId
+     * @return
+     */
     @Override
     public List<OrderDto> getOrdersOfUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found in DB!!"));
@@ -126,6 +142,15 @@ public class OrderServiceImpl implements OrderService {
         return orderDtos;
     }
 
+    /**
+     *  @author Kirti
+     *  @implNote this method is for removing order
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
     @Override
     public PageableResponse<OrderDto> getOrders(int pageNumber, int pageSize, String sortBy, String sortDir) {
 

@@ -57,6 +57,15 @@ public class OrderController {
         return new ResponseEntity<>(ordersOfUser,HttpStatus.OK);
     }
 
+    /**
+     * @author Kirti
+     * @apiNote  This api is for getOrders
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
     @GetMapping("/users")
     public ResponseEntity<PageableResponse<OrderDto>> getOrders(
             @RequestParam(value = "pageNumber", defaultValue = AppConstats.PAGE_NUMBER, required = false) Integer pageNumber,
