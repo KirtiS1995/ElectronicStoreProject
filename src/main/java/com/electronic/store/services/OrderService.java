@@ -6,10 +6,8 @@ import com.electronic.store.dtos.PageableResponse;
 
 import java.util.List;
 
-public interface OrderService {
-
+public interface OrderService{
     //create order
-    OrderDto createOrder(CreateOrderRequest orderDto);
 
     //remove order
     void removeOrder(String orderId);
@@ -18,6 +16,6 @@ public interface OrderService {
     List<OrderDto> getOrdersOfUser(String userId);
 
     //get orders
-    PageableResponse<OrderDto> getOrders(int pageNo, int pageSize, String sortBy, String sortDir);
+        PageableResponse<OrderDto> getOrders(int pageNo, int pageSize, String sortBy, String sortDir);
 
     }
