@@ -13,6 +13,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -106,18 +110,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void removeOrder(String orderId) {
-
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order is not found with id: " + orderId));
         orderRepository.delete(order);
     }
 
     @Override
     public List<OrderDto> getOrdersOfUser(String userId) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found in DB!!"));
+
+        List<Order> orderList = orderRepository.findByUser(user);
+
+        List<OrderDto> orderDtos = orderList.stream().map(order -> mapper.map(order, OrderDto.class)).collect(Collectors.toList());
+
+        return orderDtos;
     }
 
     @Override
     public PageableResponse<OrderDto> getOrders(int pageNo, int pageSize, String sortBy, String sortDir) {
-        return null;
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable= PageRequest.of(pageNo-1, pageSize, sort);
+
+        Page<Order> page = orderRepository.findAll(pageable);
+
+        return PageableResponse.getPageableResponse(page, OrderDto.class);
     }
 }
