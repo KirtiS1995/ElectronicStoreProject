@@ -1,5 +1,7 @@
 package com.electronic.store.services;
 
+import com.electronic.store.dtos.AddItemToCartRequest;
+import com.electronic.store.dtos.CartDto;
 import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.entities.Cart;
 import com.electronic.store.entities.CartItem;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @SpringBootTest
 public class CartServiceTest {
@@ -95,26 +98,38 @@ public class CartServiceTest {
 
         cart= Cart.builder()
                 .user(user)
-                .cartItem(cartItem1,cartItem2)
+                .cartItem(Set.of(cartItem1,cartItem2))
                 .build();
-
-
     }
 
     @Test
     public void addItemToCartTest() {
-
-        String productId = "123";
+        String productId = "12345";
         String userId = "user123";
-        Integer quantity = 10;
+
+        AddItemToCartRequest request=new AddItemToCartRequest();
+        request.setProductId(productId);
+        request.setQuantity(10);
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        Mockito.when()
 
-          }
+        Mockito.when(cartRepository.save(Mockito.any())).thenReturn(cart);
+
+        CartDto cartDto = cartService.addItemToCart(userId, request);
+        Assertions.assertNotNull(cartDto);
+        System.out.println(cartDto.getUser().getEmail());
+        Assertions.assertEquals(cartDto.getUser().getName(),cart.getUser().getName());
+
+    }
     @Test
     public void removeItemFromCartTest() {
+        String userId = "123user";
+        Integer cartItemId=55;
+
+        Mockito.when(cartItemRepository.findById(cartItemId)).thenReturn(Optional.of(cartItem1));
+        cartService.removeItemFromCart(userId,cartItemId);
+        Mockito.verify(cartItemRepository,Mockito.times(1)).delete(cartItem1);
 
     }
     @Test
