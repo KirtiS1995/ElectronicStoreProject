@@ -14,6 +14,7 @@ import com.electronic.store.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,14 +131,32 @@ public class CartServiceTest {
         Mockito.when(cartItemRepository.findById(cartItemId)).thenReturn(Optional.of(cartItem1));
         cartService.removeItemFromCart(userId,cartItemId);
         Mockito.verify(cartItemRepository,Mockito.times(1)).delete(cartItem1);
+        Assertions.assertThrows(RuntimeException.class,() -> cartService.removeItemFromCart("xyz",5));
 
     }
     @Test
     public void clearCartTest() {
-
+        String userId = "xyz";
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        Mockito.when(cartRepository.findByUser(Mockito.any())).thenReturn(Optional.of(cart));
+        cartRepository.delete(cart);
+//        cartService.clearCart(userId);
+        Mockito.when(cartRepository.save(cart)).thenReturn(cart);
+        Assertions.assertThrows(RuntimeException.class,() -> cartService.clearCart("abc"));
     }
+
     @Test
     public void getCartByUSerTest() {
+        String userId = "123";
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        Mockito.when(cartRepository.findByUser(Mockito.any())).thenReturn(Optional.of(cart));
+
+        CartDto cartByUSer = cartService.getCartByUSer(userId);
+        System.out.println(cartByUSer.getUser().getName());
+        System.out.println(cartByUSer);
+        Assertions.assertNotNull(cartByUSer);
+        Assertions.assertEquals(cart.getUser().getName(),cartByUSer.getUser().getName());
+        Assertions.assertThrows(RuntimeException.class,() -> cartService.getCartByUSer("abc"));
 
     }
 
