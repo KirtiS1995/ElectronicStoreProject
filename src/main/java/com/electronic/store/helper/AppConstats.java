@@ -11,9 +11,13 @@ public class AppConstats {
 
     public static final String CART_NOT_FOUND="Cart Not Found With given items..  ";
 
+    public static final String ORDER_NOT_FOUND="Order Not Found With given items..  ";
+
     public static final String QUANTITY_NOT_VALID="Requested quantity is not valid..  ";
 
     public static final String CART_REMOVED = "Item is removed from cart. ";
+
+    public static final String INVALID_ITEMS = "Invalid no. of items in Cart..! ";
 
     public static final String CART_BLANK = "Now cart is blank. ";
 
