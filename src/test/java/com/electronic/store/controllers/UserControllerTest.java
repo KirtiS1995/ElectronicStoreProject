@@ -40,7 +40,7 @@ class UserControllerTest {
 
     @BeforeEach
     public  void init() {
-     user = User.builder()
+        user = User.builder()
                 .name("kirti")
                 .email("kirti@gmail.com")
                 .password("kirti123")
@@ -56,22 +56,22 @@ class UserControllerTest {
         //data as jso+status created
         UserDto dto = mapper.map(user, UserDto.class);
         Mockito.when(userService.createUser(Mockito.any())).thenReturn(dto);
-    //actual request for url
-    this.mockMvc.perform(
-          MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertObjectToJsonString(user))
-                        .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.name").exists());
+        //actual request for url
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(user))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").exists());
     }
 
     @Test
     public void updateUserTest() throws Exception {
         //User/{userId}  +PUT request +json
         String userId ="123";
-       UserDto userDto = UserDto.builder()
+        UserDto userDto = UserDto.builder()
                 .name("kirti salunke")
                 .email("kirti@gmail.com")
                 .password("kirti123")
@@ -89,7 +89,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").exists());
-   }
+    }
 
     @Test
     void getSingleUserTest() throws Exception {
@@ -98,7 +98,7 @@ class UserControllerTest {
 
         UserDto userDto = this.mapper.map(user, UserDto.class);
 //        Mockito.when(userService.getUserById(Mockito.anyString())).thenReturn(userDto);
-         Mockito.when(userService.getUserById(userId)).thenReturn(userDto);
+        Mockito.when(userService.getUserById(userId)).thenReturn(userDto);
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/users/"+userId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ class UserControllerTest {
     }
 
     @Test
-     void getAllUserTest() throws Exception {
+    void getAllUserTest() throws Exception {
         UserDto userDto1 = UserDto.builder()
                 .name("shlok ")
                 .email("shlok@gmail.com")
@@ -137,7 +137,7 @@ class UserControllerTest {
 
         PageableResponse<UserDto> pageableResponse= new PageableResponse<>();
 
-           pageableResponse.setLastPage(false);
+        pageableResponse.setLastPage(false);
         pageableResponse.setTotalElements(2000);
         pageableResponse.setPageNumber(50);
         pageableResponse.setContent(Arrays.asList(userDto1,userDto2,userDto3));
@@ -158,7 +158,7 @@ class UserControllerTest {
     @Test
     public void deleteUserTest() throws Exception {
         String userId= "12345";
-    Mockito.doNothing().when(userService).deleteUser(Mockito.anyString());
+        Mockito.doNothing().when(userService).deleteUser(Mockito.anyString());
         this.mockMvc.perform(
                         MockMvcRequestBuilders.delete("/users/" +userId))
                 .andDo(print())
@@ -218,12 +218,12 @@ class UserControllerTest {
     }
 
     private String convertObjectToJsonString(Object user) {
-       try {
-        return new ObjectMapper().writeValueAsString(user);
-       }
-       catch (Exception e) {
+        try {
+            return new ObjectMapper().writeValueAsString(user);
+        }
+        catch (Exception e) {
             e.printStackTrace();
-           return null;
-       }
+            return null;
+        }
     }
 }
