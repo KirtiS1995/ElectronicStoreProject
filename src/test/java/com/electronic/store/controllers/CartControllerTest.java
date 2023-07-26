@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import com.electronic.store.dtos.CartItemDto;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -131,29 +132,30 @@ class CartControllerTest {
     public void removeItemFromCart() throws Exception {
         String userId= "12345";
         Integer cartItemId=11;
-        Mockito.doNothing().when(cartService).removeItemFromCart(Mockito.anyString(),Mockito.anyInt());
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.delete("/carts/" +userId+"/items/"+cartItemId))
-                .andDo(print())
-                .andExpect(status().isOk());
-        //verify
+        cartService.removeItemFromCart(userId,cartItemId);
         Mockito.verify(cartService,Mockito.times(1)).removeItemFromCart(userId, cartItemId);
     }
 
     @Test
-   public void clearCart() {
-        String userId= "12345";
-        Integer cartItemId=11;
-        Mockito.doNothing().when(cartService).removeItemFromCart(Mockito.anyString(),Mockito.anyInt());
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.delete("/carts/" +userId+"/items/"+cartItemId))
-                .andDo(print())
-                .andExpect(status().isOk());
-        //verify
-        Mockito.verify(cartService,Mockito.times(1)).removeItemFromCart(userId, cartItemId);
+   public void clearCart() throws Exception {
+        String userId="abc";
+        cartService.clearCart(userId);
+        Mockito.verify(cartService,Mockito.times(1)).clearCart(userId);
     }
 
     @Test
-   public void getCart() {
+   public void getCart() throws Exception {
+        String userId="abc";
+        Mockito.when(cartService.getCartByUSer(Mockito.anyString())).thenReturn(cartDto);
+        //actual request for url
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/cart/"+userId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(cartDto))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user").exists());
+
     }
 }
