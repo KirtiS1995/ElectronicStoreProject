@@ -1,3 +1,5 @@
+package com.electronic.store.dtos;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

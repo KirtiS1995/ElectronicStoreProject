@@ -57,17 +57,18 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto createOrder(CreateOrderRequest orderDto) {
+        logger.info("Dao Request initialized to create order ");
         String userId = orderDto.getUserId();
         String cartId = orderDto.getCartId();
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found with id: " + cartId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.CART_NOT_FOUND+cartId));
 
         //fetch CartItems
         Set<CartItem> cartitems = cart.getCartItem();
         logger.info("No. of cartItems: ",cartitems.size());
         if(cartitems.size() <= 0){
-            throw new BadApiRequestException("Invalid no. of items in Cart!!");
+            throw new BadApiRequestException(AppConstats.INVALID_ITEMS);
         }
 
         // Generate Order
@@ -110,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
 
         //save order
         Order saveOrder = orderRepository.save(order);
-
+        logger.info("Dao Request completed to create order ");
         return mapper.map(saveOrder,OrderDto.class);
     }
 
@@ -121,24 +122,27 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void removeOrder(String orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order is not found with id: " + orderId));
+        logger.info("Dao Request initialized to remove order from cart :{}",orderId);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ORDER_NOT_FOUND+orderId));
         orderRepository.delete(order);
+        logger.info("Dao Request completed to remove order from cart :{}",orderId);
     }
 
     /**
      *  @author Kirti
-     *  @implNote this method is for getting all orders of userr
+     *  @implNote this method is for getting all orders of user
      * @param userId
      * @return
      */
     @Override
     public List<OrderDto> getOrdersOfUser(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found in DB!!"));
+        logger.info("Dao Request initialized for getting order of user :{}",userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ID_NOT_FOUND+userId));
 
         List<Order> orderList = orderRepository.findByUser(user);
 
         List<OrderDto> orderDtos = orderList.stream().map(order -> mapper.map(order, OrderDto.class)).collect(Collectors.toList());
-
+        logger.info("Dao Request completed for getting order of user :{}",userId);
         return orderDtos;
     }
 
@@ -153,11 +157,11 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public PageableResponse<OrderDto> getOrders(int pageNumber, int pageSize, String sortBy, String sortDir) {
-
+        logger.info("Dao Request initialized for getting orders  :{}",pageNumber);
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         final Page<Order> orders = orderRepository.findAll(pageable);
+        logger.info("Dao Request completed for getting orders  :{}",pageNumber);
         return Helper.getPageableResponse(orders,OrderDto.class);
-
     }
 }
