@@ -2,7 +2,6 @@ package com.electronic.store.services;
 
 import com.electronic.store.dtos.AddItemToCartRequest;
 import com.electronic.store.dtos.CartDto;
-import com.electronic.store.dtos.ProductDto;
 import com.electronic.store.entities.Cart;
 import com.electronic.store.entities.CartItem;
 import com.electronic.store.entities.Product;
@@ -101,6 +100,9 @@ public class CartServiceTest {
                 .user(user)
                 .cartItem(Set.of(cartItem1,cartItem2))
                 .build();
+        cart.setCreatedBy(user.getCreatedBy());
+        cart.setLastModifiedBy(user.getLastModifiedBy());
+        cart.setIsActive(user.getIsActive());
     }
 
     @Test

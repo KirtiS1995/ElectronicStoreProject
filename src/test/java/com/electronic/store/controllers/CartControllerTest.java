@@ -99,6 +99,10 @@ class CartControllerTest {
                 .user(userDto)
                 .cartItem(Set.of(cartItemDto,cartItemDto1))
                 .build();
+        cartDto.setCreatedBy(userDto.getCreatedBy());
+        cartDto.setLastModifiedBy(userDto.getLastModifiedBy());
+        cartDto.setIsActive(userDto.getIsActive());
+
         AddItemToCartRequest  request = AddItemToCartRequest.builder().productId("12345").quantity(10).build();
 
 
