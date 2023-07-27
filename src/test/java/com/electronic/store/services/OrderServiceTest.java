@@ -2,6 +2,7 @@ package com.electronic.store.services;
 
 import com.electronic.store.dtos.CreateOrderRequest;
 import com.electronic.store.dtos.OrderDto;
+import com.electronic.store.dtos.PageableResponse;
 import com.electronic.store.entities.*;
 import com.electronic.store.exceptions.ResourceNotFoundException;
 import com.electronic.store.repositories.CartRepository;
@@ -15,6 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +37,7 @@ class OrderServiceTest {
     @Autowired
     private ModelMapper mapper;
 
-    @Autowired
+    @MockBean
     private OrderRepository orderRepository;
 
     @Autowired
@@ -167,7 +171,7 @@ class OrderServiceTest {
        Mockito.when(userRepository.findById(request.getUserId())).thenReturn(Optional.of(user));
        Mockito.when(cartRepository.findById(request.getCartId())).thenReturn(Optional.of(cart));
 
-     Mockito.doNothing().when(cartRepository.save(cart));
+//     Mockito.doNothing().when(cartRepository.save(cart));
        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
 
        OrderDto orderDto = orderService.createOrder(request);
@@ -197,11 +201,17 @@ class OrderServiceTest {
         System.out.println(ordersOfUser.size());
         Assertions.assertEquals(orderList.size(),ordersOfUser.size());
         Assertions.assertThrows(ResourceNotFoundException.class,()->orderService.getOrdersOfUser("abc"));
-
-
     }
 
     @Test
     public void getOrdersTest() {
+        List<Order> orderList= Arrays.asList(order,order1,order2);
+        Page<Order> page= new PageImpl<>(orderList);
+        Mockito.when(orderRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+        PageableResponse<OrderDto> orders = orderService.getOrders(1, 2, "orderDate", "asc");
+        System.out.println(page.getContent().size());
+        System.out.println(orders.getContent().size());
+        Assertions.assertEquals(page.getContent().size(),orders.getContent().size());
     }
+
 }
