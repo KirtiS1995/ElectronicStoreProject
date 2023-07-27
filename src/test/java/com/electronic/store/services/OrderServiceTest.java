@@ -50,7 +50,6 @@ class OrderServiceTest {
     Order order,order1,order2;
     OrderItem orderItem1,orderItem2;
 
-
     @BeforeEach
     public void init(){
         user = User.builder()
@@ -73,7 +72,7 @@ class OrderServiceTest {
                 .productImage("xyzz.png")
                 .build();
 
-        product1 = Product.builder()
+        product2 = Product.builder()
                 .title("MI")
                 .description("Phone having good HD camera")
                 .price(20000)
@@ -86,12 +85,12 @@ class OrderServiceTest {
 
         orderItem1=OrderItem.builder()
                 .product(product1)
-                .quantity(10)
                 .totalPrice(134000)
+                .quantity(10)
                 .build();
 
         orderItem2=OrderItem.builder()
-                .product(product1)
+                .product(product2)
                 .quantity(5)
                 .totalPrice(150000)
                 .build();
@@ -147,10 +146,13 @@ class OrderServiceTest {
                 .quantity(11)
                 .totalPrices(15000)
                 .build();
+        Set set=new HashSet<>();
+        set.add(cartItem1);
+        set.add(cartItem2);
 
         cart= Cart.builder()
                 .user(user)
-                .cartItem(Set.of(cartItem1,cartItem2))
+                .cartItem(set)
                 .build();
 
         cart.setCreatedBy(user.getCreatedBy());
@@ -168,15 +170,17 @@ class OrderServiceTest {
                .billingName("kirti")
                .build();
 
-       Mockito.when(userRepository.findById(request.getUserId())).thenReturn(Optional.of(user));
-       Mockito.when(cartRepository.findById(request.getCartId())).thenReturn(Optional.of(cart));
+       Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+       Mockito.when(cartRepository.findById(Mockito.anyString())).thenReturn(Optional.of(cart));
 
-//     Mockito.doNothing().when(cartRepository.save(cart));
        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
 
-       OrderDto orderDto = orderService.createOrder(request);
-       System.out.println(orderDto);
-       Assertions.assertNotNull(orderDto);
+       OrderDto order3 = orderService.createOrder(request);
+
+       Mockito.verify(cartRepository, Mockito.times(1)).save(Mockito.any());
+       System.out.println(order3);
+       Assertions.assertNotNull(order3);
+//       Assertions.assertEquals(,orderDto.getBillingName());
    }
 
    @Test
