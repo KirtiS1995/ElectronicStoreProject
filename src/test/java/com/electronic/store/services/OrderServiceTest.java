@@ -215,27 +215,27 @@ class OrderServiceTest {
         System.out.println(orders.getContent().size());
         Assertions.assertEquals(page.getContent().size(), orders.getContent().size());
     }
-//    @Test
-//    public  void updateOrderTest()
-//    {
-//        String orderId="";
-//        OrderDto orderDto= OrderDto.builder().orderAmount(12000)
-//                .orderedDate(new Date()).
-//                orderStatus("Delivered")
-//                .billingName("Pallavi yeola")
-//                .paymentStatus("PAID")
-//                .billingAddress("Moshi")
-//                .billingPhone("9876544234")
-//                .deliveryDate(null)
-//                .build();
-//
-//
-//        Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-//        Mockito.when(orderRepository.save(order)).thenReturn(order);
-//
-//        OrderDto updateOrder = orderService.updateOrder(orderDto,orderId);
-//        System.out.println(updateOrder.getOrderStatus());
-//        Assertions.assertEquals("Delivered",updateOrder.getOrderStatus());
-//}
+    @Test
+    public  void updateOrderTest()
+    {
+        String orderId="123";
+        OrderDto orderDto= OrderDto.builder().orderAmount(12000)
+                .orderDate(new Date()).
+                orderStatus("Delivered")
+                .billingName("Kirti")
+                .paymentStatus("PAID")
+                .billingAddress("pune")
+                .billingPhone("454784")
+                .deliveryDate(null)
+                .build();
+
+
+        Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        Mockito.when(orderRepository.save(order)).thenReturn(order);
+
+        OrderDto updateOrder = orderService.updateOrder(orderId,orderDto);
+        System.out.println(updateOrder.getOrderStatus());
+        Assertions.assertEquals("Delivered",updateOrder.getOrderStatus());
+}
 
 }
