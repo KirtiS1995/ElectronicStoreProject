@@ -164,4 +164,24 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Dao Request completed for getting orders  :{}",pageNumber);
         return Helper.getPageableResponse(orders,OrderDto.class);
     }
+
+    /**
+     * @author Kirti
+     * @implNote  This method is for updating order status
+     * @param orderId
+     * @param orderDto
+     * @return
+     */
+    @Override
+    public OrderDto updateOrder(String orderId, OrderDto orderDto) {
+        logger.info("Dao request for updating order info ith orderId :{}",orderId);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ORDER_NOT_FOUND + orderId));
+        order.setDeliveryDate(new Date());
+        order.setOrderStatus(orderDto.getOrderStatus());
+        order.setPaymentStatus(orderDto.getPaymentStatus());
+        Order order1 = orderRepository.save(order);
+        logger.info("Dao request completed for updating order info ith orderId :{}",orderId);
+        return mapper.map(order1,OrderDto.class);
+    }
+
 }
