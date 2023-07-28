@@ -146,6 +146,7 @@ class OrderServiceTest {
                 .quantity(11)
                 .totalPrices(15000)
                 .build();
+
         Set set=new HashSet<>();
         set.add(cartItem1);
         set.add(cartItem2);
@@ -172,22 +173,19 @@ class OrderServiceTest {
 
        Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
        Mockito.when(cartRepository.findById(Mockito.anyString())).thenReturn(Optional.of(cart));
-
        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
-
        OrderDto order3 = orderService.createOrder(request);
-
        Mockito.verify(cartRepository, Mockito.times(1)).save(Mockito.any());
        System.out.println(order3);
        Assertions.assertNotNull(order3);
-//       Assertions.assertEquals(,orderDto.getBillingName());
+       Assertions.assertEquals(order.getBillingName() ,order3.getBillingName());
+       System.out.println(order3.getBillingName());
    }
 
    @Test
    public void removeOrderTest() {
         String orderId="123";
        Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-
        orderService.removeOrder(orderId);
        Mockito.verify(orderRepository,Mockito.times(1)).delete(order);
        Assertions.assertThrows(RuntimeException.class,() -> orderService.removeOrder("55"));

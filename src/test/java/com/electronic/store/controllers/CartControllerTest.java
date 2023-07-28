@@ -1,10 +1,6 @@
 package com.electronic.store.controllers;
 
 import com.electronic.store.dtos.*;
-import com.electronic.store.entities.Cart;
-import com.electronic.store.entities.CartItem;
-import com.electronic.store.entities.Product;
-import com.electronic.store.entities.User;
 import com.electronic.store.services.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
