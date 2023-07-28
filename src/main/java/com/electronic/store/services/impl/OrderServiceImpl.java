@@ -96,14 +96,17 @@ public class OrderServiceImpl implements OrderService {
                     .order(order)
                     .build();
             orderAmount.set(orderAmount.get()+orderItem.getTotalPrice());
+            orderItem.setCreatedBy(user.getCreatedBy());
+            orderItem.setLastModifiedBy(user.getLastModifiedBy());
+            orderItem.setIsActive(user.getIsActive());
             return orderItem;
         }).collect(Collectors.toList());
 
         order.setOrderItem(orderItems);
         order.setOrderAmount(orderAmount.get());
-        order.setCreatedBy(orderDto.getCreatedBy());
-        order.setLastModifiedBy(orderDto.getLastModifiedBy());
-        order.setIsActive(orderDto.getIsActive());
+        order.setCreatedBy(user.getCreatedBy());
+        order.setLastModifiedBy(user.getLastModifiedBy());
+        order.setIsActive(user.getIsActive());
 
         // After converting into OrderItems, clear Cart & save it
         cart.getCartItem().clear();
