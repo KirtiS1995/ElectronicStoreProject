@@ -10,13 +10,14 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Getter
 @ToString
+@Builder
 public class OrderItemDto {
     private Integer orderItemId;
 
     @NotBlank(message = "OrderItem quantity is required .")
     private int quantity;
 
-    private int totalPrize;
+    private int totalPrice;
 
     private ProductDto product;
 }
