@@ -87,4 +87,11 @@ public class OrderController {
         return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 
+    @PutMapping("/{orderId}")
+    public ResponseEntity<OrderDto> getOrders(@PathVariable String orderId ,@RequestBody OrderDto orderDto){
+        logger.info("Request initialized for updating  order info for orderId  :{}",orderId);
+        OrderDto orderDto1 = orderService.updateOrder(orderId, orderDto);
+        logger.info("Request completed for updating  order info for orderId  :{}",orderId);
+        return new ResponseEntity<>(orderDto1,HttpStatus.OK);
+    }
 }

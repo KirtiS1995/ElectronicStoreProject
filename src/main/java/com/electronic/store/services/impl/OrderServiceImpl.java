@@ -96,14 +96,17 @@ public class OrderServiceImpl implements OrderService {
                     .order(order)
                     .build();
             orderAmount.set(orderAmount.get()+orderItem.getTotalPrice());
+            orderItem.setCreatedBy(user.getCreatedBy());
+            orderItem.setLastModifiedBy(user.getLastModifiedBy());
+            orderItem.setIsActive(user.getIsActive());
             return orderItem;
         }).collect(Collectors.toList());
 
         order.setOrderItem(orderItems);
         order.setOrderAmount(orderAmount.get());
-        order.setCreatedBy(orderDto.getCreatedBy());
-        order.setLastModifiedBy(orderDto.getLastModifiedBy());
-        order.setIsActive(orderDto.getIsActive());
+        order.setCreatedBy(user.getCreatedBy());
+        order.setLastModifiedBy(user.getLastModifiedBy());
+        order.setIsActive(user.getIsActive());
 
         // After converting into OrderItems, clear Cart & save it
         cart.getCartItem().clear();
@@ -164,4 +167,24 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Dao Request completed for getting orders  :{}",pageNumber);
         return Helper.getPageableResponse(orders,OrderDto.class);
     }
+
+    /**
+     * @author Kirti
+     * @implNote  This method is for updating order status
+     * @param orderId
+     * @param orderDto
+     * @return
+     */
+    @Override
+    public OrderDto updateOrder(String orderId, OrderDto orderDto) {
+        logger.info("Dao request for updating order info ith orderId :{}",orderId);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(AppConstats.ORDER_NOT_FOUND + orderId));
+        order.setDeliveryDate(new Date());
+        order.setOrderStatus(orderDto.getOrderStatus());
+        order.setPaymentStatus(orderDto.getPaymentStatus());
+        Order order1 = orderRepository.save(order);
+        logger.info("Dao request completed for updating order info ith orderId :{}",orderId);
+        return mapper.map(order1,OrderDto.class);
+    }
+
 }
