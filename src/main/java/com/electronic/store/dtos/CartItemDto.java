@@ -1,15 +1,13 @@
 package com.electronic.store.dtos;
 
 import com.electronic.store.entities.Product;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CartItemDto {
 
     private Integer cartItemId;
