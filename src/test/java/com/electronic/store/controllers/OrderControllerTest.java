@@ -171,7 +171,36 @@ class OrderControllerTest {
     }
 
     @Test
-    public void getOrdersTest() {
+    public void getOrdersTest() throws Exception {
+        PageableResponse pageableResponse=new PageableResponse<>();
+        pageableResponse.setContent(Arrays.asList(orderDto,orderDto1,orderDto2));
 
+        pageableResponse.setLastPage(false);
+        pageableResponse.setTotalElements(100);
+        pageableResponse.setTotalPages(20);
+        pageableResponse.setPageSize(10);
+        pageableResponse.setPageNumber(1);
+
+        Mockito.when(orderService.getOrders(Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
+                .thenReturn(pageableResponse);
+
+        this.mockMvc.perform(
+                MockMvcRequestBuilders.get("/orders/users")
+                        .contentType(MediaType.APPLICATION_JSON).
+                        accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk()).andReturn().getResponse();
     }
+//    @Test
+//    public  void updateOrderTest() throws Exception {
+//
+//        String orderId="1";
+//        Mockito.when(orderService.updateOrder(Mockito.any(),Mockito.anyString())).thenReturn(orderDto);
+//
+//        mockMvc.perform(put("/orders/update/"+orderId)
+//                        //.header(HttpHeaders.AUTHORIZATION,"")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(convertObjectToJsonString(orderDto))
+//                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+//                .andExpect(status().isOk()).andExpect(jsonPath("$.billingAddress").exists());
+//    }
 }

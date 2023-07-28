@@ -44,14 +44,14 @@ class OrderServiceTest {
     private OrderService orderService;
 
     private User user;
-    Product product1,product2;
+    Product product1, product2;
     Cart cart;
-    CartItem cartItem1,cartItem2;
-    Order order,order1,order2;
-    OrderItem orderItem1,orderItem2;
+    CartItem cartItem1, cartItem2;
+    Order order, order1, order2;
+    OrderItem orderItem1, orderItem2;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         user = User.builder()
                 .name("kirti")
                 .email("kirti@gmail.com")
@@ -83,13 +83,13 @@ class OrderServiceTest {
                 .productImage("ppp.png")
                 .build();
 
-        orderItem1=OrderItem.builder()
+        orderItem1 = OrderItem.builder()
                 .product(product1)
                 .totalPrice(134000)
                 .quantity(10)
                 .build();
 
-        orderItem2=OrderItem.builder()
+        orderItem2 = OrderItem.builder()
                 .product(product2)
                 .quantity(5)
                 .totalPrice(150000)
@@ -99,7 +99,7 @@ class OrderServiceTest {
         list.add(orderItem1);
         list.add(orderItem2);
 
-        order= Order.builder().orderItem(list).orderAmount(3000)
+        order = Order.builder().orderItem(list).orderAmount(3000)
                 .orderDate(new Date())
                 .orderStatus("Pending")
                 .billingName("Kirti")
@@ -109,7 +109,7 @@ class OrderServiceTest {
                 .deliveryDate(null)
                 .build();
 
-        order1= Order.builder().orderItem(list).orderAmount(30000)
+        order1 = Order.builder().orderItem(list).orderAmount(30000)
                 .orderDate(new Date())
                 .orderStatus("Pending")
                 .billingName("sakshi")
@@ -119,7 +119,7 @@ class OrderServiceTest {
                 .deliveryDate(null)
                 .build();
 
-        order2= Order.builder().orderItem(list).orderAmount(20000)
+        order2 = Order.builder().orderItem(list).orderAmount(20000)
                 .orderDate(new Date())
                 .orderStatus("Pending")
                 .billingName("shlok")
@@ -135,23 +135,23 @@ class OrderServiceTest {
         List<Order> orderList = Arrays.asList(order, order1, order2);
         List<OrderDto> dtoList = orderList.stream().map(e -> mapper.map(e, OrderDto.class)).collect(Collectors.toList());
 
-        cartItem1=CartItem.builder()
+        cartItem1 = CartItem.builder()
                 .product(product1)
                 .quantity(10)
                 .totalPrices(13400)
                 .build();
 
-        cartItem2=CartItem.builder()
+        cartItem2 = CartItem.builder()
                 .product(product2)
                 .quantity(11)
                 .totalPrices(15000)
                 .build();
 
-        Set set=new HashSet<>();
+        Set set = new HashSet<>();
         set.add(cartItem1);
         set.add(cartItem2);
 
-        cart= Cart.builder()
+        cart = Cart.builder()
                 .user(user)
                 .cartItem(set)
                 .build();
@@ -161,39 +161,39 @@ class OrderServiceTest {
         cart.setIsActive(user.getIsActive());
     }
 
-   @Test
-   public void createOrderTest() {
-       CreateOrderRequest request=CreateOrderRequest.builder()
-               .userId("user123")
-               .cartId("44")
-               .billingAddress("pune")
-               .billingPhone("983776722")
-               .billingName("kirti")
-               .build();
+    @Test
+    public void createOrderTest() {
+        CreateOrderRequest request = CreateOrderRequest.builder()
+                .userId("user123")
+                .cartId("44")
+                .billingAddress("pune")
+                .billingPhone("983776722")
+                .billingName("kirti")
+                .build();
 
-       Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
-       Mockito.when(cartRepository.findById(Mockito.anyString())).thenReturn(Optional.of(cart));
-       Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
-       OrderDto order3 = orderService.createOrder(request);
-       Mockito.verify(cartRepository, Mockito.times(1)).save(Mockito.any());
-       System.out.println(order3);
-       Assertions.assertNotNull(order3);
-       Assertions.assertEquals(order.getBillingName() ,order3.getBillingName());
-       System.out.println(order3.getBillingName());
-   }
-
-   @Test
-   public void removeOrderTest() {
-        String orderId="123";
-       Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-       orderService.removeOrder(orderId);
-       Mockito.verify(orderRepository,Mockito.times(1)).delete(order);
-       Assertions.assertThrows(RuntimeException.class,() -> orderService.removeOrder("55"));
+        Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(cartRepository.findById(Mockito.anyString())).thenReturn(Optional.of(cart));
+        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
+        OrderDto order3 = orderService.createOrder(request);
+        Mockito.verify(cartRepository, Mockito.times(1)).save(Mockito.any());
+        System.out.println(order3);
+        Assertions.assertNotNull(order3);
+        Assertions.assertEquals(order.getBillingName(), order3.getBillingName());
+        System.out.println(order3.getBillingName());
     }
 
     @Test
-     public void getOrdersOfUserTest() {
-        String userId= "xyz";
+    public void removeOrderTest() {
+        String orderId = "123";
+        Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        orderService.removeOrder(orderId);
+        Mockito.verify(orderRepository, Mockito.times(1)).delete(order);
+        Assertions.assertThrows(RuntimeException.class, () -> orderService.removeOrder("55"));
+    }
+
+    @Test
+    public void getOrdersOfUserTest() {
+        String userId = "xyz";
         List<Order> orderList = Arrays.asList(order, order1, order2);
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -201,19 +201,41 @@ class OrderServiceTest {
         List<OrderDto> ordersOfUser = orderService.getOrdersOfUser(userId);
         System.out.println(orderList.size());
         System.out.println(ordersOfUser.size());
-        Assertions.assertEquals(orderList.size(),ordersOfUser.size());
-        Assertions.assertThrows(ResourceNotFoundException.class,()->orderService.getOrdersOfUser("abc"));
+        Assertions.assertEquals(orderList.size(), ordersOfUser.size());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> orderService.getOrdersOfUser("abc"));
     }
 
     @Test
     public void getOrdersTest() {
-        List<Order> orderList= Arrays.asList(order,order1,order2);
-        Page<Order> page= new PageImpl<>(orderList);
+        List<Order> orderList = Arrays.asList(order, order1, order2);
+        Page<Order> page = new PageImpl<>(orderList);
         Mockito.when(orderRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
         PageableResponse<OrderDto> orders = orderService.getOrders(1, 2, "orderDate", "asc");
         System.out.println(page.getContent().size());
         System.out.println(orders.getContent().size());
-        Assertions.assertEquals(page.getContent().size(),orders.getContent().size());
+        Assertions.assertEquals(page.getContent().size(), orders.getContent().size());
     }
+//    @Test
+//    public  void updateOrderTest()
+//    {
+//        String orderId="";
+//        OrderDto orderDto= OrderDto.builder().orderAmount(12000)
+//                .orderedDate(new Date()).
+//                orderStatus("Delivered")
+//                .billingName("Pallavi yeola")
+//                .paymentStatus("PAID")
+//                .billingAddress("Moshi")
+//                .billingPhone("9876544234")
+//                .deliveryDate(null)
+//                .build();
+//
+//
+//        Mockito.when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+//        Mockito.when(orderRepository.save(order)).thenReturn(order);
+//
+//        OrderDto updateOrder = orderService.updateOrder(orderDto,orderId);
+//        System.out.println(updateOrder.getOrderStatus());
+//        Assertions.assertEquals("Delivered",updateOrder.getOrderStatus());
+//}
 
 }
