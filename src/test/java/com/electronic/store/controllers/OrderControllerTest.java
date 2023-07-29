@@ -96,7 +96,7 @@ class OrderControllerTest {
                 .deliveryDate(null)
                 .build();
 
-        orderDto= OrderDto.builder().orderItem(list).orderAmount(30000)
+        orderDto1= OrderDto.builder().orderItem(list).orderAmount(30000)
                 .orderDate(new Date())
                 .orderStatus("Pending")
                 .billingName("sakshi")
@@ -106,11 +106,11 @@ class OrderControllerTest {
                 .deliveryDate(null)
                 .build();
 
-        orderDto= OrderDto.builder().orderItem(list).orderAmount(20000)
+        orderDto2= OrderDto.builder().orderItem(list).orderAmount(20000)
                 .orderDate(new Date())
-                .orderStatus("Pending")
+                .orderStatus("Delivered")
                 .billingName("shlok")
-                .paymentStatus("NOT_PAID")
+                .paymentStatus("PAID")
                 .billingAddress("Nashik")
                 .billingPhone("78456844")
                 .deliveryDate(null)
@@ -190,17 +190,18 @@ class OrderControllerTest {
                         accept(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isOk()).andReturn().getResponse();
     }
-//    @Test
-//    public  void updateOrderTest() throws Exception {
-//
-//        String orderId="1";
-//        Mockito.when(orderService.updateOrder(Mockito.any(),Mockito.anyString())).thenReturn(orderDto);
-//
-//        mockMvc.perform(put("/orders/update/"+orderId)
-//                        //.header(HttpHeaders.AUTHORIZATION,"")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(convertObjectToJsonString(orderDto))
-//                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
-//                .andExpect(status().isOk()).andExpect(jsonPath("$.billingAddress").exists());
-//    }
+    @Test
+    public  void updateOrderTest() throws Exception {
+
+        String orderId="123";
+        Mockito.when(orderService.updateOrder(Mockito.anyString(),Mockito.any())).thenReturn(orderDto2);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/orders/"+orderId)
+                        //.header(HttpHeaders.AUTHORIZATION,"")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonString(orderDto))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk()).andExpect(jsonPath("$.billingAddress").exists());
+    }
 }
