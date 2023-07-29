@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
      * @param pageNumber
      * @param pageSize
      * @param sortBy
-     * @param sortDir
+     * @param sortDi
      * @return
      */
     @Override
